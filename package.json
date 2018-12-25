@@ -1,0 +1,58 @@
+{
+  "name": "nuber-server",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/gskim/nuber-server.git",
+  "author": "gskim <gskim@zigbnag.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bcrypt": "^3.0.1",
+    "body-parser": "^1.18.3",
+    "class-validator": "^0.9.1",
+    "cors": "^2.8.4",
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "express-graphql": "^0.7.1",
+    "graphql-tools": "3.0.4",
+    "helmet": "^3.13.0",
+    "jsonwebtoken": "^8.3.0",
+    "lodash": "^4.17.11",
+    "mailgun-js": "^0.21.0",
+    "morgan": "^1.9.1",
+    "pg": "^7.4.3",
+    "reflect-metadata": "^0.1.10",
+    "routing-controllers": "^0.7.7",
+    "twilio": "^3.17.4",
+    "type-graphql": "^0.16.0",
+    "typedi": "^0.8.0",
+    "typeorm": "^0.2.9",
+    "typeorm-typedi-extensions": "^0.2.1"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^2.0.0",
+    "@types/body-parser": "^1.17.0",
+    "@types/cors": "^2.8.4",
+    "@types/dotenv": "^4.0.3",
+    "@types/express": "^4.16.0",
+    "@types/express-graphql": "^0.6.2",
+    "@types/helmet": "^0.0.42",
+    "@types/jsonwebtoken": "^7.2.8",
+    "@types/lodash": "^4.14.116",
+    "@types/mailgun-js": "^0.16.1",
+    "@types/morgan": "^1.7.35",
+    "@types/node": "^8.5.5",
+    "@types/twilio": "^0.0.10",
+    "nodemon": "^1.18.4",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "typescript": "^3.1.1"
+  },
+  "scripts": {
+    "dev": "cd src && nodemon --watch 'src/**/*.ts' --exec ts-node AppLocal.ts"
+  },
+  "now": {
+    "name": "nuber-server",
+    "dotenv": ".env.production"
+  }
+}

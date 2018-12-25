@@ -1,0 +1,66 @@
+{
+	"extends": [
+		"tslint:recommended",
+		"tslint-eslint-rules"
+	],
+	"linterOptions": {
+		"exclude": ["config/**/*.js", "node_modules/**/*."]
+	},
+	"rules": {
+		"semicolon": [
+			true,
+			"never"
+		],
+		"indent": [
+			true,
+			"tabs",
+			4
+		],
+		"quotemark": [
+			true,
+			"single",
+			"avoid-escape"
+		],
+		"no-object-literal-type-assertion": false,
+		"no-implicit-dependencies": [
+			true,
+			"dev"
+		],
+		"max-line-length": false,
+		"no-duplicate-imports": false,
+		"object-literal-sort-keys": false,
+		"curly": [
+			true,
+			"ignore-same-line"
+		],
+		"variable-name": [
+			true,
+			"ban-keywords",
+			"check-format",
+			"allow-snake-case",
+			"allow-leading-underscore"
+		],
+		"no-submodule-imports": false,
+		"object-literal-shorthand": [
+			true,
+			"never"
+		],
+		"object-curly-spacing": [
+			true,
+			"always"
+		],
+		"interface-name": false,
+		"object-literal-key-quotes": false,
+		"no-return-await": false,
+		"array-type": [
+			true,
+			"array"
+		],
+		"max-classes-per-file": false,
+		"no-unused-variable": true,
+		"no-unused-expression": false,
+		"radix": false,
+		"no-empty-interface": false
+	},
+	"rulesDirectory": []
+}
