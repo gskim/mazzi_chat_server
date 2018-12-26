@@ -8,7 +8,9 @@ let server: any
 
 async function createServer() {
 	try {
-		await dbConnection()
+		const a = await dbConnection()
+		console.log('=============================')
+		console.log(a)
 		server = awsServerlessExpress.createServer(app)
 	} catch (error) {
 		server = null
@@ -19,6 +21,7 @@ async function createServer() {
 
 export function handler(event: APIGatewayEvent, context: Context) {
 	(async () => {
+		console.log(process.env)
 		if (!server) {
 			await createServer()
 		}

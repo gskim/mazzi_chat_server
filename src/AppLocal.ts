@@ -1,6 +1,6 @@
 // Dotenv는 최상단에서 실행되어야 다른 파일에서도 참조할 수 있음
 import * as dotenv from 'dotenv'
-dotenv.config({ path: '../.env' })
+dotenv.config()
 import * as http from 'http'
 // ORM
 import 'reflect-metadata'
@@ -19,8 +19,7 @@ class AppLocal {
 
 	public async start() {
 		try {
-			const a = await dbConnection()
-			console.log(a)
+			await dbConnection()
 			this.server.listen(this.port)
 			this.server.on('error', this.onError.bind(this))
 			this.server.on('listening', this.onListening.bind(this))
