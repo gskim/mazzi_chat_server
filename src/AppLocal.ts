@@ -5,7 +5,7 @@ import * as http from 'http'
 // ORM
 import 'reflect-metadata'
 import { createConnection } from 'typeorm'
-import { app } from './app'
+import { app } from './App'
 import connectionOptions from './ormConfig'
 
 class AppLocal {
