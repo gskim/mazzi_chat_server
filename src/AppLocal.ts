@@ -4,9 +4,8 @@ dotenv.config({ path: '../.env' })
 import * as http from 'http'
 // ORM
 import 'reflect-metadata'
-import { createConnection } from 'typeorm'
-import { app } from './App'
-import connectionOptions from './ormConfig'
+
+import { app, dbConnection } from './App'
 
 class AppLocal {
 	private server: any
@@ -20,7 +19,8 @@ class AppLocal {
 
 	public async start() {
 		try {
-			await createConnection(connectionOptions)
+			const a = await dbConnection()
+			console.log(a)
 			this.server.listen(this.port)
 			this.server.on('error', this.onError.bind(this))
 			this.server.on('listening', this.onListening.bind(this))

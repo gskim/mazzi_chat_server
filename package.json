@@ -1,12 +1,14 @@
 {
-  "name": "nuber-server",
+  "name": "mazzi_chat_server",
   "version": "1.0.0",
   "main": "index.js",
-  "repository": "https://github.com/gskim/nuber-server.git",
-  "author": "gskim <gskim@zigbnag.com>",
+  "repository": "https://github.com/gskim/mazzi_chat_server.git",
+  "author": "gskim <kiseon1987@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "bcrypt": "^3.0.1",
+    "aws-lambda": "^0.1.2",
+    "aws-serverless-express": "^3.3.5",
+    "bcrypt": "3.0.3",
     "body-parser": "^1.18.3",
     "class-validator": "^0.9.1",
     "cors": "^2.8.4",
@@ -29,6 +31,8 @@
     "typeorm-typedi-extensions": "^0.2.1"
   },
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.17",
+    "@types/aws-serverless-express": "^3.3.0",
     "@types/bcrypt": "^2.0.0",
     "@types/body-parser": "^1.17.0",
     "@types/cors": "^2.8.4",
@@ -43,16 +47,19 @@
     "@types/node": "^8.5.5",
     "@types/twilio": "^0.0.10",
     "nodemon": "^1.18.4",
+    "serverless-dotenv-plugin": "^2.0.1",
+    "serverless-prune-plugin": "^1.3.2",
     "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-eslint-rules": "^5.4.0",
     "typescript": "^3.1.1"
   },
   "scripts": {
-    "dev": "cd src && nodemon --watch 'src/**/*.ts' --exec ts-node AppLocal.ts"
+    "start": "cd src && nodemon --watch 'src/**/*.ts' --exec ts-node AppLocal.ts",
+    "deploy": "npx tsc && serverless deploy --aws-profile gskim"
   },
   "now": {
-    "name": "nuber-server",
-    "dotenv": ".env.production"
+    "name": "mazzi-chat",
+    "dotenv": ".env"
   }
 }

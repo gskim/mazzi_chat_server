@@ -1,0 +1,31 @@
+service: mazzi-chat-com
+
+plugins:
+  - serverless-dotenv-plugin
+  - serverless-prune-plugin
+
+custom:
+  stage: prod
+  dotenv:
+    path: ./.env.production
+  prune:
+    automatic: true
+    number: 20
+
+provider:
+  name: aws
+  stage: prod
+  runtime: nodejs8.10
+  region: us-east-1
+  memorySize: 1024
+  timeout: 60
+  versionFunctions: true
+
+functions:
+  mazzi-chat-com:
+    handler: dist/AppLambda.handler
+    name: mazzi-chat-com-${self:custom.stage}
+    runtime: nodejs8.10
+    memorySize: 1024
+    timeout: 60
+    role: arn:aws:iam::834201812602:role/mazzi-chat-com-prod-us-east-1-lambdaRole

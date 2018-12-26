@@ -8,8 +8,8 @@ export class UserController {
 	@Get('/test')
 	public async test(
 		@Req() req: any, @Res() res: any) {
-		console.log(req.headers)
-		return req.headers
+
+		return res.json(await User.find())
 
 	}
 

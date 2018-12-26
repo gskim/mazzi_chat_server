@@ -17,7 +17,8 @@ import JWT from './middlewares/JWT'
 import { UserMiddlewares } from './middlewares/UserMiddlewares'
 // express
 export const app = express()
-
+import { createConnection } from 'typeorm'
+import connectionOptions from './ormConfig'
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded())
 app.use(cors())
@@ -26,6 +27,10 @@ app.use(morgan('[:status]:method :url :response-time ms'))
 routingUseContainer(Container)
 ormUseContainer(Container)
 graphqlContainer(Container)
+
+export const dbConnection = async () => {
+	return await createConnection(connectionOptions)
+}
 
 useExpressServer(app, {
 	defaults: {
@@ -41,7 +46,7 @@ useExpressServer(app, {
 })
 app.use(JWT)
 const schema = buildSchemaSync({
-	resolvers: [__dirname + '/resolvers/**/*.resolvers.ts'],
+	resolvers: [__dirname + '/resolvers/**/*.resolvers.ts', __dirname + '/resolvers/**/*.resolvers.js'],
   })
 app.use('/graphql', graphqlHTTP({
 	schema: schema,

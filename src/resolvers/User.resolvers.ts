@@ -1,9 +1,11 @@
 import { Arg, Ctx, Field, InputType, Mutation, Query, Resolver } from 'type-graphql'
+import { Service } from 'typedi'
 import { Repository } from 'typeorm'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import User from '../entities/User'
 import { UserInput } from '../types/User.types'
 
+@Service()
 @Resolver()
 class UserResolver {
 
@@ -15,7 +17,8 @@ class UserResolver {
 
 	@Query((returns) => [User] || null)
 	public async users() {
-		return await this.userRepository.findOne(1)
+		const users = await this.userRepository.find()
+		return users
 	}
 
 	@Mutation((returns) => User)
@@ -23,7 +26,6 @@ class UserResolver {
 		@Arg('user') newUserData: UserInput,
 		@Ctx() ctx,
 	): Promise<User> {
-		console.log(newUserData)
 		const user = this.userRepository.create(newUserData)
 		return await this.userRepository.save(user)
 	}
