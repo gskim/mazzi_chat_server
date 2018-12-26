@@ -23,9 +23,6 @@ class AppLocal {
 			this.server.listen(this.port)
 			this.server.on('error', this.onError.bind(this))
 			this.server.on('listening', this.onListening.bind(this))
-			// await createConnection(connectionOptions).then(() => {
-			//
-			// })
 
 		} catch (error) {
 			// tslint:disable-next-line:no-console

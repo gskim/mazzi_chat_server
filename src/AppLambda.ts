@@ -1,6 +1,5 @@
 import { APIGatewayEvent, Context } from 'aws-lambda'
 import * as awsServerlessExpress from 'aws-serverless-express'
-// ORM
 import 'reflect-metadata'
 import { app, dbConnection } from './App'
 
@@ -8,10 +7,11 @@ let server: any
 
 async function createServer() {
 	try {
-		const a = await dbConnection()
-		console.log('=============================')
-		console.log(a)
+		console.log('-------------')
+		await dbConnection()
+		console.log('=============')
 		server = awsServerlessExpress.createServer(app)
+		console.log('++++++++++++++')
 	} catch (error) {
 		server = null
 		// tslint:disable-next-line:no-console
@@ -21,7 +21,7 @@ async function createServer() {
 
 export function handler(event: APIGatewayEvent, context: Context) {
 	(async () => {
-		console.log(process.env)
+		console.log('handler')
 		if (!server) {
 			await createServer()
 		}

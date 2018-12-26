@@ -29,8 +29,7 @@ ormUseContainer(Container)
 graphqlContainer(Container)
 
 export const dbConnection = async () => {
-	console.log('----------------------')
-	console.log(connectionOptions)
+	console.log('dbConnection')
 	return await createConnection(connectionOptions)
 }
 
