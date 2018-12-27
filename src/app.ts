@@ -1,3 +1,4 @@
+// import { graphqlExpress } from 'apollo-server-express'
 import * as bodyParser from 'body-parser'
 import * as cors from 'cors'
 import * as express from 'express'
@@ -6,7 +7,6 @@ import * as graphqlHTTP from 'express-graphql'
 import * as morgan from 'morgan'
 import { dirname } from 'path'
 import 'reflect-metadata'
-// routing-controllers
 import { Action, useContainer as routingUseContainer, useExpressServer } from 'routing-controllers'
 import { buildSchemaSync, useContainer as graphqlContainer } from 'type-graphql'
 import { Container } from 'typedi'
@@ -15,7 +15,7 @@ import User from './entities/User'
 import Authorization from './middlewares/Authorization'
 import JWT from './middlewares/JWT'
 import { UserMiddlewares } from './middlewares/UserMiddlewares'
-// express
+
 export const app = express()
 import { createConnection } from 'typeorm'
 import connectionOptions from './ormConfig'
@@ -29,7 +29,6 @@ ormUseContainer(Container)
 graphqlContainer(Container)
 
 export const dbConnection = async () => {
-	console.log('dbConnection')
 	return await createConnection(connectionOptions)
 }
 

@@ -22,6 +22,7 @@ async function createServer() {
 export function handler(event: APIGatewayEvent, context: Context) {
 	(async () => {
 		console.log('handler')
+		console.log(event)
 		if (!server) {
 			await createServer()
 		}
