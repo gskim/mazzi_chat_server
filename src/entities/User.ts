@@ -1,6 +1,6 @@
-// import * as bcrypt from 'bcrypt'
+import * as bcrypt from 'bcrypt'
 import { IsEmail } from 'class-validator'
-import * as passwordHash from 'password-hash'
+// import * as passwordHash from 'password-hash'
 import { Field, ID, ObjectType } from 'type-graphql'
 import {
 	BaseEntity,
@@ -86,26 +86,24 @@ class User extends BaseEntity {
 	@UpdateDateColumn()
 	public updatedAt: string
 
-	public comparePassword(password: string): boolean {
+	public async comparePassword(password: string): Promise<boolean> {
 		if (this.password) {
-			return passwordHash.verify(password, this.password)
-			// return bcrypt.compare(password, this.password)
+			return await bcrypt.compare(password, this.password)
 		}
 		return false
 	}
 
 	@BeforeInsert()
 	@BeforeUpdate()
-	public savePassword(): void {
+	public async savePassword(): Promise<void> {
 		if (this.password) {
-			const hashedPassword = this.hashPassword(this.password)
+			const hashedPassword = await this.hashPassword(this.password)
 			this.password = hashedPassword
 		}
 	}
 
-	private hashPassword(password: string): string {
-		return passwordHash.generate(password)
-		// return bcrypt.hash(password, BCRYPT_ROUNDS)
+	private async hashPassword(password: string): Promise<string> {
+		return bcrypt.hash(password, BCRYPT_ROUNDS)
 	}
 }
 
