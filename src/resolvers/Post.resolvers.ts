@@ -20,8 +20,6 @@ class PostResolver {
 		const post = await Post.findOne(id, {
 			relations: ['user'],
 		})
-
-		console.log('---------')
 		if (post) {
 			const results = await manager.getTreeRepository(Post).findDescendantsTree(post)
 
