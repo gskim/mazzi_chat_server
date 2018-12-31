@@ -1,32 +1,91 @@
+import { Field, ID, ObjectType, registerEnumType } from 'type-graphql'
 import {
+	AfterInsert,
 	BaseEntity,
 	Column,
 	CreateDateColumn,
 	Entity,
+	Index,
+	JoinColumn,
 	ManyToOne,
 	OneToMany,
+	OneToOne,
 	PrimaryGeneratedColumn,
+	Tree,
+	TreeChildren,
+	TreeLevelColumn,
+	TreeParent,
+	Unique,
 	UpdateDateColumn,
 } from 'typeorm'
+import User from './User'
 
 export enum PostStatus {
-	공개 = 'public',
-	비공개 = 'private',
-	삭제 = 'delete',
+	PUBLIC = 'public',
+	PRIVATE = 'private',
+	DELETE = 'delete',
 }
-
-@Entity()
+registerEnumType(PostStatus, {
+	name: 'PostStatus',
+})
+@ObjectType()
+@Entity({
+	orderBy: {
+		orderId: 'ASC',
+	},
+})
+@Unique(['orderId'])
+@Index(['orderId'])
+@Tree('closure-table')
 class Post extends BaseEntity {
+
+	@Field((type) => ID)
 	@PrimaryGeneratedColumn() public id: number
 
+	@Field()
 	@Column({ type: 'text', nullable: false })
 	public text: string
 
-	@Column({ type: 'text', enum: PostStatus })
-	public status: string
+	@Field()
+	@Column({ type: 'text', enum: PostStatus, default: PostStatus.PUBLIC })
+	public status: PostStatus
 
-	@CreateDateColumn() public createdAt: string
+	@Field((type) => Boolean)
+	@Column({ default: false })
+	public isImage: boolean = false
 
-	@UpdateDateColumn() public updatedAt: string
+	@Column({ unique: true, nullable: true })
+	public orderId: number
+
+	@Field((type) => User)
+	@ManyToOne((type) => User)
+	@JoinColumn()
+	public user: User
+
+	@Field((type) => Post)
+	@ManyToOne((type) => Post, (post) => post.children)
+	public parent: Post
+
+	@Field((type) => [Post])
+	@OneToMany((type) => Post, (post) => post.parent)
+	public children: Post[]
+
+	@Field()
+	@CreateDateColumn() public createdAt: Date
+
+	@UpdateDateColumn() public updatedAt: Date
+
+	// @Field((type) => Post)
+	// @TreeParent()
+	// public parentPost: Post
+
+	// @Field((type) => [Post])
+	// @TreeChildren()
+	// public childPosts: Post[]
+
+	// @TreeLevelColumn()
+	// @Column({ default: 1 })
+	// public level: number
+
 }
 export default Post

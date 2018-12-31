@@ -6,32 +6,33 @@ import {
 	Entity,
 	ManyToOne,
 	OneToMany,
+	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm'
-import Message from './Message'
 import User from './User'
 
-@Entity()
 @ObjectType()
-class Chat extends BaseEntity {
+@Entity()
+class Follow extends BaseEntity {
 	@Field((type) => ID)
 	@PrimaryGeneratedColumn() public id: number
 
-	@Field((type) => Number)
-	@ManyToOne((type) => User)
-	public fromUserId: User
+	@Field((type) => Boolean)
+	@Column()
+	public isFollow: boolean
 
-	@Field((type) => Number)
+	@Field((type) => User)
 	@ManyToOne((type) => User)
-	public toUserId: User
+	public fromUser: User
 
-	@Field((type) => [Message])
-	@OneToMany((type) => Message, (message) => message.id)
-	public messages: Message[]
+	@Field((type) => User)
+	@ManyToOne((type) => User)
+	public toUser: User
 
 	@CreateDateColumn() public createdAt: Date
 
 	@UpdateDateColumn() public updatedAt: Date
+
 }
-export default Chat
+export default Follow

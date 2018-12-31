@@ -17,26 +17,23 @@ class Message extends BaseEntity {
 	@Field((type) => ID)
 	@PrimaryGeneratedColumn() public id: number
 
+	@Field((type) => String)
 	@Column({ type: 'text' })
 	public text: string
 
-	@Column({ nullable: true })
-	public chatId: number
-
+	@Field((type) => Boolean)
 	@Column({ type: 'boolean', default: false })
 	public isRead: boolean
 
+	@Field((type) => Boolean)
 	@Column({ type: 'boolean', default: false })
 	public sendSuccess: boolean
 
-	@ManyToOne((type) => Chat, (chat) => chat.messages)
+	@ManyToOne((type) => Chat, (chat) => chat.id)
 	public chat: Chat
 
-	@ManyToOne((type) => User, (user) => user.messages)
-	public user: User
+	@CreateDateColumn() public createdAt: Date
 
-	@CreateDateColumn() public createdAt: string
-
-	@UpdateDateColumn() public updatedAt: string
+	@UpdateDateColumn() public updatedAt: Date
 }
 export default Message

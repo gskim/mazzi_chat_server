@@ -5,10 +5,10 @@ import User from '../entities/User'
 @JsonController('/users')
 export class UserController {
 
-	@Get('/')
-	public async users(
-		@Req() req: any, @Res() res: any) {
-		return res.json(await User.find())
-	}
+	// @Get('/')
+	// public async users(
+	// 	@Req() req: any, @Res() res: any) {
+	// 	return res.json(await User.find())
+	// }
 
 }

@@ -781,6 +781,11 @@ class-transformer@^0.1.9:
   version "0.1.10"
   resolved "https://registry.yarnpkg.com/class-transformer/-/class-transformer-0.1.10.tgz#350f168ebb4c1f87edb18b98dd973681fc20fff7"
 
+class-transformer@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/class-transformer/-/class-transformer-0.2.0.tgz#e54b34112e8ef7f913ef938c81fed8ed949fc9c7"
+  integrity sha512-6N/5WkEmLZCKxyC2CAPYQIJt3pDZzDFag7AExpyWRm7CjaS/U62VDRU+Z2AUrQaNpnuiXRlli0so4PJUqGSVZQ==
+
 class-utils@^0.3.5:
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/class-utils/-/class-utils-0.3.6.tgz#f93369ae8b9a7ce02fd41faad0ca83033190c463"
@@ -3621,6 +3626,7 @@ typeorm-typedi-extensions@^0.2.1:
 typeorm@^0.2.9:
   version "0.2.9"
   resolved "https://registry.yarnpkg.com/typeorm/-/typeorm-0.2.9.tgz#b21a55f4c7ae398c104911e298485c232bcceefc"
+  integrity sha512-guvrl5TH85N0y1AdPRuCrs2OTRQqs1wVgM+GrMfaiAGF8X+EoHDTUg2SPmcGtoAOSg7CnrCPxxwKOH4VvBr5Tw==
   dependencies:
     app-root-path "^2.0.1"
     buffer "^5.1.0"

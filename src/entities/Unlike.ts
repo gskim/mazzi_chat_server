@@ -6,32 +6,29 @@ import {
 	Entity,
 	ManyToOne,
 	OneToMany,
+	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm'
-import Message from './Message'
 import User from './User'
 
-@Entity()
 @ObjectType()
-class Chat extends BaseEntity {
+@Entity()
+class Unlike extends BaseEntity {
 	@Field((type) => ID)
 	@PrimaryGeneratedColumn() public id: number
 
-	@Field((type) => Number)
-	@ManyToOne((type) => User)
-	public fromUserId: User
+	@Field((type) => Boolean)
+	@Column()
+	public status: boolean
 
-	@Field((type) => Number)
-	@ManyToOne((type) => User)
-	public toUserId: User
-
-	@Field((type) => [Message])
-	@OneToMany((type) => Message, (message) => message.id)
-	public messages: Message[]
+	@Field((type) => User)
+	@OneToOne((type) => User)
+	public user: User
 
 	@CreateDateColumn() public createdAt: Date
 
 	@UpdateDateColumn() public updatedAt: Date
+
 }
-export default Chat
+export default Unlike

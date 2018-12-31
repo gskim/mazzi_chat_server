@@ -7,6 +7,7 @@ import * as graphqlHTTP from 'express-graphql'
 import * as morgan from 'morgan'
 import { dirname } from 'path'
 import 'reflect-metadata'
+
 import { Action, useContainer as routingUseContainer, useExpressServer } from 'routing-controllers'
 import { buildSchemaSync, useContainer as graphqlContainer } from 'type-graphql'
 import { Container } from 'typedi'
@@ -47,6 +48,7 @@ useExpressServer(app, {
 app.use(JWT)
 const schema = buildSchemaSync({
 	resolvers: [__dirname + '/resolvers/**/*.resolvers.ts', __dirname + '/resolvers/**/*.resolvers.js'],
+	emitSchemaFile: true,
   })
 app.use('/graphql', graphqlHTTP({
 	schema: schema,

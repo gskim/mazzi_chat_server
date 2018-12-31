@@ -7,11 +7,8 @@ let server: any
 
 async function createServer() {
 	try {
-		console.log('-------------')
 		await dbConnection()
-		console.log('=============')
 		server = awsServerlessExpress.createServer(app)
-		console.log('++++++++++++++')
 	} catch (error) {
 		server = null
 		// tslint:disable-next-line:no-console
@@ -21,8 +18,6 @@ async function createServer() {
 
 export function handler(event: APIGatewayEvent, context: Context) {
 	(async () => {
-		console.log('handler')
-		console.log(event)
 		if (!server) {
 			await createServer()
 		}
