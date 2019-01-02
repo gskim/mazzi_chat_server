@@ -36,7 +36,6 @@ registerEnumType(PostStatus, {
 })
 @Unique(['orderId'])
 @Index(['orderId'])
-@Tree('closure-table')
 class Post extends BaseEntity {
 
 	@Field((type) => ID)
@@ -59,7 +58,6 @@ class Post extends BaseEntity {
 
 	@Field((type) => User)
 	@ManyToOne((type) => User)
-	@JoinColumn()
 	public user: User
 
 	@Field((type) => Post)
@@ -74,18 +72,6 @@ class Post extends BaseEntity {
 	@CreateDateColumn() public createdAt: Date
 
 	@UpdateDateColumn() public updatedAt: Date
-
-	// @Field((type) => Post)
-	// @TreeParent()
-	// public parentPost: Post
-
-	// @Field((type) => [Post])
-	// @TreeChildren()
-	// public childPosts: Post[]
-
-	// @TreeLevelColumn()
-	// @Column({ default: 1 })
-	// public level: number
 
 }
 export default Post

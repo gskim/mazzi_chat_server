@@ -13,12 +13,17 @@ export default class PostService {
 	public async addPost(post: Post) {
 		const postOrderSequence = await PostOrderSequence.save(new PostOrderSequence())
 		post.orderId = -1 * postOrderSequence.id
-		// const manager = getManager()
-		// return await manager.save(post)
-		return await this.postRepository.addPost(post)
+		return await this.postRepository.add(post)
 	}
 
 	public async getPost(id: number) {
-		return await this.postRepository.getPost(id)
+		return await this.postRepository.get(id)
+	}
+
+	/**
+	 * name
+	 */
+	public async getPostTree(id: number) {
+		return await this.postRepository.getTree(id)
 	}
 }

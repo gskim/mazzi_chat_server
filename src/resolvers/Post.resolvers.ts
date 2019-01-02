@@ -16,15 +16,6 @@ class PostResolver {
 	public async getUserTree(
 		@Arg('id') id: number,
 	) {
-		const manager = getManager()
-		const post = await Post.findOne(id, {
-			relations: ['user'],
-		})
-		if (post) {
-			const results = await manager.getTreeRepository(Post).findDescendantsTree(post)
-
-			return results
-		}
-		return {}
+		return await this.postService.getPostTree(id)
 	}
 }

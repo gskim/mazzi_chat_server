@@ -1,6 +1,6 @@
-import { plainToClass } from 'class-transformer'
+import { classToPlain, plainToClass } from 'class-transformer'
 import { Request } from 'express'
-import { CurrentUser, Get, JsonController, Req, Res } from 'routing-controllers'
+import { CurrentUser, Get, JsonController, QueryParam, Req, Res } from 'routing-controllers'
 import { Service } from 'typedi'
 import { getManager, getTreeRepository } from 'typeorm'
 import { InjectRepository } from 'typeorm-typedi-extensions'
@@ -14,33 +14,30 @@ export class PostController {
 
 	@Get('/')
 	public async posts() {
-		const manager = getManager()
-		return await manager.getTreeRepository(Post).findTrees()
+		return await Post.find()
 	}
 
 	@Get('/one')
-	public async getOne() {
-		const manager = getManager()
-		// const post = await Post.findOne(73)
-		const post = plainToClass(Post, { id: 73, text: 'a' })
-		return await manager.getTreeRepository(Post).findDescendantsTree(post)
+	public async getOne(
+		@QueryParam('id') id: number,
+	) {
+		return await this.postService.getPostTree(id)
 	}
 
 	@Get('/addChild')
-	public async addChild() {
-		const post = await Post.findOne(89)
-		if (post) {
-			const newPost = new Post()
-			newPost.text = 'child2'
-			return await this.postService.addPost(newPost)
-		}
-		return {}
+	public async addChild(
+		@QueryParam('id') id: number,
+	) {
+		const newPost = new Post()
+		newPost.text = 'child1'
+		newPost.parent = plainToClass(Post, { id: id })
+		return await this.postService.addPost(newPost)
 	}
 
 	@Get('/add')
 	public async add(@Res() res) {
 		const post = new Post()
-		post.text = 'text3'
+		post.text = 'text1'
 		const a = await this.postService.addPost(post)
 		return a
 	}
