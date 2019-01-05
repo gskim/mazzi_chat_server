@@ -20,6 +20,15 @@ import { UserMiddlewares } from './middlewares/UserMiddlewares'
 export const app = express()
 import { createConnection } from 'typeorm'
 import connectionOptions from './ormConfig'
+
+import * as Entity from 'baiji-entity'
+Entity.types = {
+	string: { default: null },
+	number: { default: NaN },
+	boolean: { default: false },
+	date: { format: 'iso', default: null },
+	object: { default: {} },
+  }
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded())
 app.use(cors())

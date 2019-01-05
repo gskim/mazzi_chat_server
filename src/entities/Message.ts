@@ -4,15 +4,24 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	Index,
+	JoinColumn,
 	ManyToOne,
 	PrimaryGeneratedColumn,
+	Unique,
 	UpdateDateColumn,
 } from 'typeorm'
 import Chat from './Chat'
 import User from './User'
 
 @ObjectType()
-@Entity()
+@Entity({
+	orderBy: {
+		orderId: 'ASC',
+	},
+})
+@Unique(['orderId'])
+@Index(['orderId'])
 class Message extends BaseEntity {
 	@Field((type) => ID)
 	@PrimaryGeneratedColumn() public id: number
@@ -29,8 +38,14 @@ class Message extends BaseEntity {
 	@Column({ type: 'boolean', default: false })
 	public sendSuccess: boolean
 
+	@Column({ unique: true })
+	public orderId: number
+
 	@ManyToOne((type) => Chat, (chat) => chat.id)
 	public chat: Chat
+
+	@ManyToOne((type) => User)
+	public user: User
 
 	@CreateDateColumn() public createdAt: Date
 

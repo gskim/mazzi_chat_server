@@ -560,6 +560,20 @@ backo2@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/backo2/-/backo2-1.0.2.tgz#31ab1ac8b129363463e35b3ebb69f4dfcfba7947"
 
+baiji-entity@^1.1.0-alpha.5:
+  version "1.1.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/baiji-entity/-/baiji-entity-1.1.0-alpha.5.tgz#158ba17fbcbeb1a12c9ac425e3e51e3899ae25db"
+  integrity sha512-JXVl6w77Hl/tD0MNXnvFwmf4QZg8TnTL9PaOE65Ju+QI4Xx8nlozBSX1vlijrfUp6edrWTUHjV5PffS40EFqQg==
+  dependencies:
+    baiji-normalizer "^1.0.7"
+    debug "^3.1.0"
+    stoc "1.0.1"
+
+baiji-normalizer@^1.0.7:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/baiji-normalizer/-/baiji-normalizer-1.0.8.tgz#2e2314c35063947fa0d2890c4f0a5e2ab0eb3f5d"
+  integrity sha512-NCuwOo0nHiNN3DbXsjUIJd5peYpeZXbr26QT9bI6d5bAQgt+tgLysloHJrZbWri8sQSYsFeLjPcXK8VPnFH2CA==
+
 balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
@@ -3321,6 +3335,11 @@ static-extend@^0.1.1:
 statuses@~1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/statuses/-/statuses-1.4.0.tgz#bb73d446da2796106efcc1b601a253d6c46bd087"
+
+stoc@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/stoc/-/stoc-1.0.1.tgz#00a813f8dc0970f61c4bcfda241154a936129362"
+  integrity sha512-jmsn18dLS1/NhOZMkrglU5TMgaaukeqylpd6MOBjr7UPjs9UfhPJv8Lhzgk7/eDp3WqXkybRsj4zwFQ4unsAKw==
 
 stream-combiner@~0.0.4:
   version "0.0.4"

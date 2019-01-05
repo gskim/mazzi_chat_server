@@ -4,6 +4,7 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinColumn,
 	ManyToOne,
 	OneToMany,
 	OneToOne,
@@ -24,6 +25,7 @@ class Unlike extends BaseEntity {
 
 	@Field((type) => User)
 	@OneToOne((type) => User)
+	@JoinColumn()
 	public user: User
 
 	@CreateDateColumn() public createdAt: Date

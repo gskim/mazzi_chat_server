@@ -1,7 +1,7 @@
 // import * as bcrypt from 'bcrypt'
 import { IsEmail } from 'class-validator'
 import * as passwordHash from 'password-hash'
-import { Field, ID, ObjectType } from 'type-graphql'
+import { Field, ID, ObjectType, registerEnumType } from 'type-graphql'
 import {
 	BaseEntity,
 	BeforeInsert,
@@ -15,6 +15,15 @@ import {
 	UpdateDateColumn,
 } from 'typeorm'
 import Chat from './Chat'
+
+export enum Gender {
+	Man = 'm',
+	Woman = 'w',
+}
+
+registerEnumType(Gender, {
+	name: 'Gender',
+})
 
 const BCRYPT_ROUNDS = 10
 @ObjectType()
@@ -37,27 +46,24 @@ class User extends BaseEntity {
 	public verifiedEmail: boolean
 
 	@Field()
-	@Column({ type: 'int', nullable: false })
-	public birthYear: number
+	@Column({ type: 'enum', enum: Gender, nullable: true })
+	public gender?: Gender
 
 	@Field()
-	@Column({ type: 'int', nullable: false })
-	public birthMonth: number
+	@Column({ type: 'int', nullable: true })
+	public birthYear?: number
 
 	@Field()
-	@Column({ type: 'int', nullable: false })
-	public birthDay: number
+	@Column({ type: 'int', nullable: true })
+	public birthMonth?: number
+
+	@Field()
+	@Column({ type: 'int', nullable: true })
+	public birthDay?: number
 
 	@Field({ nullable: true })
 	@Column({ type: 'text', nullable: true })
 	public password?: string
-
-	@Column({ type: 'varchar', length: 12, nullable: true })
-	public phone?: string
-
-	@Field()
-	@Column({ type: 'boolean', default: false })
-	public verifiedPhone: boolean
 
 	@Field({ nullable: true })
 	@Column({ type: 'text', nullable: true })
@@ -65,20 +71,28 @@ class User extends BaseEntity {
 
 	@Field()
 	@Column({ type: 'double precision', default: 0 })
-	public lon: number
+	public lat: number
 
 	@Field()
 	@Column({ type: 'double precision', default: 0 })
-	public lat: number
+	public lon: number
 
-	@Column({ type: 'text', nullable: true })
-	public fbId?: string
+	@Column({ type: 'int', nullable: true })
+	public snsId?: number
 
-	@Column({ type: 'text', nullable: true })
-	public kakaoId?: string
+	@Column({ type: 'varchar', length: 10, nullable: true })
+	public snsType?: string
 
-	@Column({ type: 'text', nullable: true })
-	public googleId?: string
+	@Column({ type: 'int', default: 0 })
+	public point: number
+
+	@Field()
+	@CreateDateColumn()
+	public createdAt: Date
+
+	@Field()
+	@UpdateDateColumn()
+	public updatedAt: Date
 
 	@Field((type) => [Chat])
 	@OneToMany((type) => Chat, (chat) => chat.id)
@@ -91,14 +105,6 @@ class User extends BaseEntity {
 	@Field((type) => User)
 	@OneToMany((type) => User, (user) => user.id)
 	public follower: User
-
-	@Field()
-	@CreateDateColumn()
-	public createdAt: Date
-
-	@Field()
-	@UpdateDateColumn()
-	public updatedAt: Date
 
 	public comparePassword(password: string): boolean {
 		if (this.password) {

@@ -3,6 +3,7 @@ import { Service } from 'typedi'
 import { Repository } from 'typeorm'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import User from '../entities/User'
+import UserService from '../services/UserService'
 import { UserInput } from '../types/User.types'
 
 @Service()
@@ -13,6 +14,7 @@ class UserResolver {
 
 	constructor(
 		@InjectRepository(User) private readonly userRepository: Repository<User>,
+		protected userService: UserService,
 	  ) {}
 
 	@Query((returns) => [User] || null)

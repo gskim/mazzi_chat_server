@@ -53,16 +53,18 @@ type User {
   profilePhoto: String
   lon: Float!
   lat: Float!
+  createdAt: DateTime!
+  updatedAt: DateTime!
   chats: [Chat!]!
   following: User!
   follower: User!
-  createdAt: DateTime!
-  updatedAt: DateTime!
 }
 
 input UserInput {
   email: String
   password: String
+  snsId: Float
+  snsType: String
   birthYear: Float!
   birthMonth: Float!
   birthDay: Float!

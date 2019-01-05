@@ -46,14 +46,14 @@ class Post extends BaseEntity {
 	public text: string
 
 	@Field()
-	@Column({ type: 'text', enum: PostStatus, default: PostStatus.PUBLIC })
+	@Column({ type: 'enum', enum: PostStatus, default: PostStatus.PUBLIC })
 	public status: PostStatus
 
 	@Field((type) => Boolean)
 	@Column({ default: false })
 	public isImage: boolean = false
 
-	@Column({ unique: true, nullable: true })
+	@Column({ unique: true })
 	public orderId: number
 
 	@Field((type) => User)

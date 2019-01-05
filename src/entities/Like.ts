@@ -4,6 +4,7 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinColumn,
 	ManyToOne,
 	OneToMany,
 	OneToOne,
@@ -22,6 +23,7 @@ class Like extends BaseEntity {
 	public status: boolean
 
 	@OneToOne((type) => User)
+	@JoinColumn()
 	public user: User
 
 	@CreateDateColumn() public createdAt: Date

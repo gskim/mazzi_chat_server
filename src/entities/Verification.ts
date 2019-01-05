@@ -4,9 +4,12 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinColumn,
+	OneToOne,
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm'
+import User from './User'
 
 export enum VerificationTarget {
 	PHONE = 'PHONE',
@@ -19,8 +22,9 @@ class Verification extends BaseEntity {
 	@Column({ type: 'text', enum: VerificationTarget })
 	public target: VerificationTarget
 
-	@Column({ type: 'text' })
-	public payload: string
+	@OneToOne((type) => User)
+	@JoinColumn()
+	public user: User
 
 	@Column({ type: 'text' })
 	public key: string

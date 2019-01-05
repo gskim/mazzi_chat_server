@@ -9,6 +9,7 @@
     "apollo-server-express": "^2.3.1",
     "aws-lambda": "^0.1.2",
     "aws-serverless-express": "^3.3.5",
+    "baiji-entity": "^1.1.0-alpha.5",
     "bcrypt": "^3.0.3",
     "body-parser": "^1.18.3",
     "class-transformer": "^0.2.0",
