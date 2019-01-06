@@ -22,14 +22,14 @@ export class UserController {
 		@BodyParam('birthDay') birthDay: number,
 		@BodyParam('gender') gender: Gender,
 	) {
-		const user = await User.findOne(currentUser.id)
-		if (user) {
-			user.nickname = nickname
-			user.birthYear = birthYear
-			user.birthMonth = birthMonth
-			user.birthDay = birthDay
-			user.gender = gender
-			await user.save()
+		console.log(currentUser)
+		if (currentUser) {
+			currentUser.nickname = nickname
+			currentUser.birthYear = birthYear
+			currentUser.birthMonth = birthMonth
+			currentUser.birthDay = birthDay
+			currentUser.gender = gender
+			await currentUser.save()
 			return {
 				success: true,
 			}

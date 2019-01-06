@@ -21,7 +21,7 @@ class Unlike extends BaseEntity {
 	@PrimaryGeneratedColumn() public id: number
 
 	@Field((type) => Boolean)
-	@Column()
+	@Column({ default: true })
 	public status: boolean
 
 	@Field((type) => User)

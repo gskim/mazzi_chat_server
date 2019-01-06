@@ -4,6 +4,10 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	Generated,
+	JoinColumn,
+	JoinTable,
+	ManyToMany,
 	ManyToOne,
 	OneToMany,
 	PrimaryGeneratedColumn,
@@ -18,13 +22,16 @@ class Chat extends BaseEntity {
 	@Field((type) => ID)
 	@PrimaryGeneratedColumn() public id: number
 
-	@Field((type) => Number)
-	@ManyToOne((type) => User)
-	public fromUserId: User
+	@Column({ nullable: true })
+	public name?: string
 
-	@Field((type) => Number)
-	@ManyToOne((type) => User)
-	public toUserId: User
+	@Column({ default: 2 })
+	public maxPersons: number
+
+	@Field((type) => [User])
+	@ManyToMany((type) => User, (user) => user.chats)
+	@JoinTable()
+	public users: User[]
 
 	@Field((type) => [Message])
 	@OneToMany((type) => Message, (message) => message.id)

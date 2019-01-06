@@ -7,6 +7,7 @@ import { getManager, getTreeRepository } from 'typeorm'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import Like from '../entities/Like'
 import Post, { PostStatus } from '../entities/Post'
+import Unlike from '../entities/Unlike'
 import User from '../entities/User'
 import PostRepresentor from '../representors/PostRepresentor'
 import PostService from '../services/PostService'
@@ -67,7 +68,6 @@ export class PostController {
 		@CurrentUser() currentUser: User,
 		@Param('id') id: number,
 	) {
-		console.log(currentUser)
 		const like = await Like.findOne({
 			where: {
 				postId: id,
@@ -79,10 +79,37 @@ export class PostController {
 			await like.save()
 		} else {
 			const newLike = plainToClass(Like, {
-				postId: id,
-				userId: currentUser.id,
+				post: plainToClass(Post, {
+					id: id,
+				}),
+				user: currentUser,
 			})
 			await newLike.save()
+		}
+	}
+
+	@RequestPost('/:id/unlikes')
+	public async toggleUnlike(
+		@CurrentUser() currentUser: User,
+		@Param('id') id: number,
+	) {
+		const unlike = await Unlike.findOne({
+			where: {
+				postId: id,
+				userId: currentUser.id,
+			},
+		})
+		if (unlike) {
+			unlike.status = !unlike.status
+			await unlike.save()
+		} else {
+			const newUnlike = plainToClass(Unlike, {
+				post: plainToClass(Post, {
+					id: id,
+				}),
+				user: currentUser,
+			})
+			await newUnlike.save()
 		}
 	}
 }

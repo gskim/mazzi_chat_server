@@ -22,7 +22,7 @@ export default class PostService {
 
 	public async getPostList(lastId: number) {
 		return await this.postRepository.find({
-			relations: ['user', 'children', 'likes', 'unlikes', 'image'],
+			relations: ['user', 'children', 'likes', 'unlikes', 'image', 'children.children'],
 			where: {
 				id: lastId ? LessThan(lastId) : MoreThan(0),
 			},

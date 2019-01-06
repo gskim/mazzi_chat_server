@@ -5,8 +5,7 @@
 
 type Chat {
   id: ID!
-  fromUserId: Float!
-  toUserId: Float!
+  users: [User!]!
   messages: [Message!]!
 }
 

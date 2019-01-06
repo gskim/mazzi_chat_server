@@ -9,6 +9,9 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	JoinColumn,
+	JoinTable,
+	ManyToMany,
 	ManyToOne,
 	OneToMany,
 	PrimaryGeneratedColumn,
@@ -97,7 +100,7 @@ class User extends BaseEntity {
 	public updatedAt: Date
 
 	@Field((type) => [Chat])
-	@OneToMany((type) => Chat, (chat) => chat.id)
+	@ManyToMany((type) => Chat, (chat) => chat.users)
 	public chats: Chat[]
 
 	@Field((type) => User)

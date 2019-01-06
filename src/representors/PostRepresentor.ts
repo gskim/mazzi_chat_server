@@ -17,19 +17,28 @@ export default class PostRepresentor {
 		likeCnt: {
 			type: 'number',
 			get: (obj) => {
-				return obj.likes.length
+				return obj.likes.filter((like) => like.status).length
 			},
 		},
 		unlikeCnt: {
 			type: 'number',
 			get: (obj) => {
-				return obj.unlikes.length
+				return obj.unlikes.filter((unlike) => unlike.status).length
 			},
 		},
 		replyCnt: {
 			type: 'number',
 			get: (obj) => {
-				return obj.children.length
+				let replyCount = 0
+				if (obj.children) {
+					for (const child of obj.children) {
+						if (child.children) {
+							replyCount = replyCount + child.children.length
+						}
+					}
+					replyCount = obj.children.length + replyCount
+				}
+				return replyCount
 			},
 		},
 	}
