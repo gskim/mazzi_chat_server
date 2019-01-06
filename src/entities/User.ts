@@ -15,6 +15,8 @@ import {
 	UpdateDateColumn,
 } from 'typeorm'
 import Chat from './Chat'
+import Like from './Like'
+import Unlike from './Unlike'
 
 export enum Gender {
 	Man = 'm',
@@ -105,6 +107,14 @@ class User extends BaseEntity {
 	@Field((type) => User)
 	@OneToMany((type) => User, (user) => user.id)
 	public follower: User
+
+	@Field((type) => Like)
+	@OneToMany((type) => Like, (like) => like.user)
+	public likes: Like[]
+
+	@Field((type) => Unlike)
+	@OneToMany((type) => Unlike, (unlike) => unlike.user)
+	public unlikes: Unlike[]
 
 	public comparePassword(password: string): boolean {
 		if (this.password) {

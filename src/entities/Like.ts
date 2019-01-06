@@ -11,6 +11,7 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm'
+import Post from './Post'
 import User from './User'
 
 @ObjectType()
@@ -19,12 +20,16 @@ class Like extends BaseEntity {
 
 	@PrimaryGeneratedColumn() public id: number
 
-	@Column()
+	@Field((type) => Boolean)
+	@Column({ default: true })
 	public status: boolean
 
-	@OneToOne((type) => User)
-	@JoinColumn()
+	@Field((type) => User)
+	@ManyToOne((type) => User)
 	public user: User
+
+	@ManyToOne((type) => Post)
+	public post: Post
 
 	@CreateDateColumn() public createdAt: Date
 

@@ -66,9 +66,9 @@ export default class UserService {
 				userId: user.id,
 			})
 			const createdVerification = await Verification.save(verification)
-			if (createdUser.email) {
-				const sendedEmail = await sendVerificationEmail(createdUser.email, createdVerification.key)
-			}
+			// if (createdUser.email) {
+			// 	const sendedEmail = await sendVerificationEmail(createdUser.email, createdVerification.key)
+			// }
 			return createJWT(user.id)
 		}
 		throw new NotFoundError('not found user')

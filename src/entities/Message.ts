@@ -32,6 +32,10 @@ class Message extends BaseEntity {
 
 	@Field((type) => Boolean)
 	@Column({ type: 'boolean', default: false })
+	public isImage: boolean
+
+	@Field((type) => Boolean)
+	@Column({ type: 'boolean', default: false })
 	public isRead: boolean
 
 	@Field((type) => Boolean)
@@ -41,7 +45,7 @@ class Message extends BaseEntity {
 	@Column({ unique: true })
 	public orderId: number
 
-	@ManyToOne((type) => Chat, (chat) => chat.id)
+	@ManyToOne((type) => Chat)
 	public chat: Chat
 
 	@ManyToOne((type) => User)

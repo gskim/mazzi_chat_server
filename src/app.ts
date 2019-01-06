@@ -24,13 +24,13 @@ import connectionOptions from './ormConfig'
 import * as Entity from 'baiji-entity'
 Entity.types = {
 	string: { default: null },
-	number: { default: NaN },
+	number: { default: null },
 	boolean: { default: false },
 	date: { format: 'iso', default: null },
 	object: { default: {} },
   }
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded())
+app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
 app.use(morgan('[:status]:method :url :response-time ms'))
 

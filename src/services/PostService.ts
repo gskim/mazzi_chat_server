@@ -1,6 +1,6 @@
 import { classToPlain, plainToClass } from 'class-transformer'
 import { Service } from 'typedi'
-import { getManager, Repository } from 'typeorm'
+import { getManager, LessThan, MoreThan, Repository } from 'typeorm'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import Post from '../entities/Post'
 import PostOrderSequence from '../entities/PostOrderSequence'
@@ -18,6 +18,16 @@ export default class PostService {
 
 	public async getPost(id: number) {
 		return await this.postRepository.get(id)
+	}
+
+	public async getPostList(lastId: number) {
+		return await this.postRepository.find({
+			relations: ['user', 'children', 'likes', 'unlikes', 'image'],
+			where: {
+				id: lastId ? LessThan(lastId) : MoreThan(0),
+			},
+			take: 20,
+		})
 	}
 
 	/**

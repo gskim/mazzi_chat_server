@@ -18,6 +18,9 @@ import {
 	Unique,
 	UpdateDateColumn,
 } from 'typeorm'
+import Image from './Image'
+import Like from './Like'
+import Unlike from './Unlike'
 import User from './User'
 
 export enum PostStatus {
@@ -49,9 +52,10 @@ class Post extends BaseEntity {
 	@Column({ type: 'enum', enum: PostStatus, default: PostStatus.PUBLIC })
 	public status: PostStatus
 
-	@Field((type) => Boolean)
-	@Column({ default: false })
-	public isImage: boolean = false
+	@Field((type) => Image)
+	@OneToOne((type) => Image)
+	@JoinColumn()
+	public image: Image
 
 	@Column({ unique: true })
 	public orderId: number
@@ -67,6 +71,12 @@ class Post extends BaseEntity {
 	@Field((type) => [Post])
 	@OneToMany((type) => Post, (post) => post.parent)
 	public children: Post[]
+
+	@OneToMany((type) => Like, (like) => like.post)
+	public likes: Like[]
+
+	@OneToMany((type) => Unlike, (unlike) => unlike.post)
+	public unlikes: Unlike[]
 
 	@Field()
 	@CreateDateColumn() public createdAt: Date

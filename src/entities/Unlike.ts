@@ -11,6 +11,7 @@ import {
 	PrimaryGeneratedColumn,
 	UpdateDateColumn,
 } from 'typeorm'
+import Post from './Post'
 import User from './User'
 
 @ObjectType()
@@ -24,9 +25,11 @@ class Unlike extends BaseEntity {
 	public status: boolean
 
 	@Field((type) => User)
-	@OneToOne((type) => User)
-	@JoinColumn()
+	@ManyToOne((type) => User)
 	public user: User
+
+	@ManyToOne((type) => Post)
+	public post: Post
 
 	@CreateDateColumn() public createdAt: Date
 
