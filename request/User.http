@@ -3,7 +3,7 @@ POST http://localhost:3000/users/email
 Content-Type: application/json
 
 {
-	"email": "gskim@google.com",
+	"email": "gskim@gmail.com",
 	"password": "password"
 }
 

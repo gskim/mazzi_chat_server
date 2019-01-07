@@ -7,6 +7,16 @@ import User from '../entities/User'
 
 @JsonController('/chats')
 export class ChatController {
+
+	@Get('/me')
+	public async getMyChatList(
+		@CurrentUser() currentUser: User,
+	) {
+		return await User.findOne(currentUser.id, {
+			relations: ['chats'],
+		})
+	}
+
 	@Post('/')
 	public async createOpenChat(
 		@CurrentUser() currentUser: User,
@@ -20,7 +30,7 @@ export class ChatController {
 			description: description,
 			password: password,
 			type: type,
-			users: currentUser,
+			users: [currentUser],
 		})
 		const createdChat = await Chat.save(chat)
 		return {
@@ -45,42 +55,29 @@ export class ChatController {
 					data: {},
 				}
 			}
-			if (chat.comparePassword(password)) {
-				chat.users.push(currentUser)
-				await chat.save()
-				return {
-					error: null,
-					data: chat,
+			if (chat.type === ChatType.PRIVATE) {
+				if (!chat.comparePassword(password)) {
+					return {
+						error: 'password fail',
+						data: {},
+					}
 				}
-				// const user = await User.findOne(currentUser.id, {
-				// 	relations: ['chats'],
-				// })
-				// if (user) {
-				// 	user.chats.push(plainToClass(Chat, {
-				// 		id: id,
-				// 	}))
-				// 	await user.save()
-				// 	return {
-				// 		error: null,
-				// 		data: chat,
-				// 	}
-				// }
-				// throw new NotFoundError('User not found')
+			}
+			chat.users.push(currentUser)
+			await chat.save()
+			return {
+				error: null,
+				data: chat,
 			}
 		}
+		throw new NotFoundError('Chat not found')
 	}
 
 	@Get('/')
-	public async chats() {
+	public async getAllChatList() {
 		return await Chat.find({
 			relations: ['users'],
-		})
-	}
-
-	@Get('/users')
-	public async users() {
-		return await User.findOne(9, {
-			relations: ['chats'],
+			take: 20,
 		})
 	}
 }
