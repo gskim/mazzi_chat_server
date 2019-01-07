@@ -127,7 +127,7 @@ class User extends BaseEntity {
 	}
 
 	@BeforeInsert()
-	@BeforeUpdate()
+	// @BeforeUpdate()
 	public savePassword(): void {
 		if (this.password) {
 			const hashedPassword = this.hashPassword(this.password)
