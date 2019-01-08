@@ -1,7 +1,7 @@
 import * as Entity from 'baiji-entity'
 import { plainToClass } from 'class-transformer'
 import { Request } from 'express'
-import { Authorized, BodyParam, CurrentUser, Get, JsonController, NotFoundError, Param, Post, Put } from 'routing-controllers'
+import { Authorized, BodyParam, CurrentUser, Delete, Get, JsonController, NotFoundError, Param, Post, Put } from 'routing-controllers'
 import Chat, { ChatType } from '../entities/Chat'
 import User from '../entities/User'
 
@@ -71,6 +71,27 @@ export class ChatController {
 			}
 		}
 		throw new NotFoundError('Chat not found')
+	}
+
+	@Delete('/:id')
+	public async leaveChat(
+		@CurrentUser() currentUser: User,
+		@Param('id') id: number,
+	) {
+		const user = await User.findOne(currentUser.id, {
+			relations: ['chats'],
+		})
+		if (user) {
+			user.chats = user.chats.filter((chat) => chat.id !== id)
+			return {
+				error: null,
+				data: await user.save(),
+			}
+		}
+		return {
+			error: 'Not Found User',
+			data: {},
+		}
 	}
 
 	@Get('/')
