@@ -3,7 +3,7 @@ POST http://localhost:3000/chats
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNTQ2Njg1MzkxfQ.hMaxzGnvbP_fD_HD_lJf-A8Q4yIGAqYA_rvF1wLE3Y0
 Content-Type: application/json
 ######################
-POST http://localhost:3000/chats/17
+POST http://localhost:3000/chats/17/join
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTUsImlhdCI6MTU0Njc4NjU3NX0.q9vsx08wGGB8hBVOTbNfYZ2U-QpgSIiwPM2MIsJ_23k
 Content-Type: application/json
 ######################
@@ -20,7 +20,7 @@ POST http://localhost:3000/chats
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NiwiaWF0IjoxNTQ2ODY1OTEzfQ.PGyueKylhSfFO8VLRcDa6mhQcSE1c15Nx32qcCZBPIQ
 Content-Type: application/json
 ######################
-POST http://localhost:3000/chats/2
+POST http://localhost:3000/chats/2/join
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NywiaWF0IjoxNTQ2ODY2MTM0fQ.BanYj8S_gWb_iCiMNpZL18peAMPWrFKU9VvGT1A5Vvk
 Content-Type: application/json
 ######################

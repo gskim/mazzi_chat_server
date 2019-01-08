@@ -4,9 +4,45 @@ import { Request } from 'express'
 import { Authorized, BodyParam, CurrentUser, Delete, Get, JsonController, NotFoundError, Param, Post, Put } from 'routing-controllers'
 import Chat, { ChatType } from '../entities/Chat'
 import User from '../entities/User'
+import ChatService from '../services/ChatService'
 
 @JsonController('/chats')
 export class ChatController {
+
+	constructor(protected chatService: ChatService) {}
+
+	@Post('/invite')
+	public async inviteChat(
+		@CurrentUser() currentUser: User,
+	) {
+		const createdChat = await this.chatService.createChat(currentUser, {})
+		return {
+			error: null,
+			data: createdChat,
+		}
+	}
+
+	@Post('/:id/accept')
+	public async acceptChat(
+		@CurrentUser() currentUser: User,
+		@Param('id') id: number,
+	) {
+		const chat = await Chat.findOne(id, {
+			relations: ['users'],
+		})
+		if (chat) {
+			chat.users.push(currentUser)
+			await chat.save()
+			return {
+				error: null,
+				data: chat,
+			}
+		}
+		return {
+			error: 'Not Found Chat',
+			data: {},
+		}
+	}
 
 	@Get('/me')
 	public async getMyChatList(
@@ -25,21 +61,20 @@ export class ChatController {
 		@BodyParam('type') type: ChatType,
 		@BodyParam('password') password: string,
 	) {
-		const chat = plainToClass(Chat, {
+		const params = {
 			name: name,
 			description: description,
 			password: password,
 			type: type,
-			users: [currentUser],
-		})
-		const createdChat = await Chat.save(chat)
+		}
+		const createdChat = await this.chatService.createChat(currentUser, params)
 		return {
 			error: null,
 			data: createdChat,
 		}
 	}
 
-	@Post('/:id')
+	@Post('/:id/join')
 	public async joinChat(
 		@CurrentUser() currentUser: User,
 		@Param('id') id: number,

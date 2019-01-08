@@ -63,7 +63,7 @@ export class PostController {
 		const createdReply = await this.postService.addPost(reply)
 	}
 
-	@RequestPost('/:id/likes')
+	@RequestPost('/:id/like')
 	public async toggleLike(
 		@CurrentUser() currentUser: User,
 		@Param('id') id: number,
@@ -88,7 +88,7 @@ export class PostController {
 		}
 	}
 
-	@RequestPost('/:id/unlikes')
+	@RequestPost('/:id/unlike')
 	public async toggleUnlike(
 		@CurrentUser() currentUser: User,
 		@Param('id') id: number,
