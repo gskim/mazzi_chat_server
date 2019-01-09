@@ -3,11 +3,13 @@ import {
 	Column,
 	CreateDateColumn,
 	Entity,
+	Index,
 	JoinColumn,
 	ManyToOne,
 	OneToMany,
 	OneToOne,
 	PrimaryGeneratedColumn,
+	Unique,
 	UpdateDateColumn,
 } from 'typeorm'
 import User from './User'
@@ -19,11 +21,17 @@ export enum NotificationType {
 	INVITE = 'invite',
 	ACCEPT = 'accept',
 	LEAVE = 'leave',
-	EXPIRATION = 'expiration',
+	EXPIRE = 'expire',
 	EXTEND = 'extend',
 }
 
-@Entity()
+@Entity({
+	orderBy: {
+		orderId: 'ASC',
+	},
+})
+@Unique(['orderId'])
+@Index(['orderId'])
 class Notification extends BaseEntity {
 
 	@PrimaryGeneratedColumn() public id: number
@@ -45,6 +53,9 @@ class Notification extends BaseEntity {
 
 	@ManyToOne((type) => User)
 	public receiveUser: User
+
+	@Column({ unique: true })
+	public orderId: number
 
 	@CreateDateColumn() public createdAt: Date
 

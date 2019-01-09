@@ -1,7 +1,7 @@
 import * as Entity from 'baiji-entity'
 import { classToPlain, plainToClass } from 'class-transformer'
 import { Request } from 'express'
-import { Authorized, BodyParam, CurrentUser, Get, JsonController, Param, Post as RequestPost, QueryParam } from 'routing-controllers'
+import { Authorized, BodyParam, CurrentUser, Get, JsonController, NotFoundError, Param, Post as RequestPost, QueryParam } from 'routing-controllers'
 import { Service } from 'typedi'
 import { getManager, getTreeRepository } from 'typeorm'
 import { InjectRepository } from 'typeorm-typedi-extensions'
@@ -10,12 +10,16 @@ import Post, { PostStatus } from '../entities/Post'
 import Unlike from '../entities/Unlike'
 import User from '../entities/User'
 import PostRepresentor from '../representors/PostRepresentor'
+import NotificationService from '../services/NotificationService'
 import PostService from '../services/PostService'
 @Service()
 @JsonController('/posts')
 export class PostController {
 
-	constructor(protected postService: PostService) {}
+	constructor(
+		protected postService: PostService,
+		protected notificationService: NotificationService,
+	) {}
 
 	@Get('/')
 	public async getPostList(
@@ -68,23 +72,31 @@ export class PostController {
 		@CurrentUser() currentUser: User,
 		@Param('id') id: number,
 	) {
-		const like = await Like.findOne({
-			where: {
-				postId: id,
-				userId: currentUser.id,
-			},
-		})
+		const [like, post] = await Promise.all([
+			Like.findOne({
+				where: {
+					post: plainToClass(Post, { id: id }),
+					user: currentUser,
+				},
+			}),
+			Post.findOne(id, {
+				relations: ['user'],
+			}),
+		])
+		if (!post) {
+			throw new NotFoundError('Not found post')
+		}
 		if (like) {
 			like.status = !like.status
 			await like.save()
+			if (like.status) await this.notificationService.addLikeNotification(post.user, currentUser, post.id)
 		} else {
 			const newLike = plainToClass(Like, {
-				post: plainToClass(Post, {
-					id: id,
-				}),
+				post: post,
 				user: currentUser,
 			})
 			await newLike.save()
+			await this.notificationService.addLikeNotification(post.user, currentUser, post.id)
 		}
 	}
 
@@ -93,15 +105,24 @@ export class PostController {
 		@CurrentUser() currentUser: User,
 		@Param('id') id: number,
 	) {
-		const unlike = await Unlike.findOne({
-			where: {
-				postId: id,
-				userId: currentUser.id,
-			},
-		})
+		const [unlike , post] = await Promise.all([
+			await Unlike.findOne({
+				where: {
+					postId: id,
+					userId: currentUser.id,
+				},
+			}),
+			Post.findOne(id, {
+				relations: ['user'],
+			}),
+		])
+		if (!post) {
+			throw new NotFoundError('Not found post')
+		}
 		if (unlike) {
 			unlike.status = !unlike.status
 			await unlike.save()
+			if (unlike.status) await this.notificationService.addLikeNotification(post.user, currentUser, post.id)
 		} else {
 			const newUnlike = plainToClass(Unlike, {
 				post: plainToClass(Post, {
@@ -110,6 +131,7 @@ export class PostController {
 				user: currentUser,
 			})
 			await newUnlike.save()
+			await this.notificationService.addLikeNotification(post.user, currentUser, post.id)
 		}
 	}
 }
