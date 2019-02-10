@@ -45,6 +45,10 @@ class Post extends BaseEntity {
 	@PrimaryGeneratedColumn() public id: number
 
 	@Field()
+	@Column({ type: 'varchar', nullable: true, length: 30 })
+	public title: string
+
+	@Field()
 	@Column({ type: 'text', nullable: false })
 	public text: string
 
@@ -53,9 +57,8 @@ class Post extends BaseEntity {
 	public status: PostStatus
 
 	@Field((type) => Image)
-	@OneToOne((type) => Image)
-	@JoinColumn()
-	public image: Image
+	@OneToMany((type) => Image, (image) => image.post)
+	public images: Image[]
 
 	@Column({ unique: true })
 	public orderId: number

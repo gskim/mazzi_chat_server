@@ -38,7 +38,7 @@ class Image extends BaseEntity {
 	@Column({ type: 'int' })
 	public size: number
 
-	@OneToOne((type) => Post)
+	@ManyToOne((type) => Post)
 	public post: Post
 
 	@CreateDateColumn() public createdAt: Date
