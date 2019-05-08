@@ -1,4 +1,11 @@
 import * as Entity from 'baiji-entity'
+Entity.types = {
+	string: { default: null },
+	number: { default: null },
+	boolean: { default: false },
+	date: { format: 'iso', default: null },
+	object: { default: {} },
+}
 
 export default class PostRepresentor {
 
@@ -46,7 +53,9 @@ export default class PostRepresentor {
 	public static postList = new Entity(PostRepresentor.postDefault)
 
 	public static postDetail = new Entity(PostRepresentor.postDefault)
-	.add('children', { using: new Entity(PostRepresentor.postDefault)
-		.add('children', { using: new Entity(PostRepresentor.postDefault) }) })
+		.add('children', {
+			using: new Entity(PostRepresentor.postDefault)
+				.add('children', { using: new Entity(PostRepresentor.postDefault) }),
+		})
 
 }

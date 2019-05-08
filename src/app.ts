@@ -21,14 +21,6 @@ export const app = express()
 import { createConnection } from 'typeorm'
 import connectionOptions from './ormConfig'
 
-import * as Entity from 'baiji-entity'
-Entity.types = {
-	string: { default: null },
-	number: { default: null },
-	boolean: { default: false },
-	date: { format: 'iso', default: null },
-	object: { default: {} },
-  }
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cors())
@@ -58,7 +50,7 @@ app.use(JWT)
 const schema = buildSchemaSync({
 	resolvers: [__dirname + '/resolvers/**/*.resolvers.ts', __dirname + '/resolvers/**/*.resolvers.js'],
 	emitSchemaFile: true,
-  })
+})
 app.use('/graphql', graphqlHTTP({
 	schema: schema,
 	graphiql: true,

@@ -1,4 +1,11 @@
 import * as Entity from 'baiji-entity'
+Entity.types = {
+	string: { default: null },
+	number: { default: null },
+	boolean: { default: false },
+	date: { format: 'iso', default: null },
+	object: { default: {} },
+}
 
 export default class UserRepresentor {
 
