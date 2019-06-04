@@ -19,6 +19,7 @@ import {
 } from 'typeorm'
 import Chat from './Chat'
 import Like from './Like'
+import Post from './Post'
 import Unlike from './Unlike'
 
 export enum Gender {
@@ -26,9 +27,7 @@ export enum Gender {
 	Woman = 'w',
 }
 
-registerEnumType(Gender, {
-	name: 'Gender',
-})
+registerEnumType(Gender, { name: 'Gender' })
 
 const BCRYPT_ROUNDS = 10
 @ObjectType()
@@ -118,6 +117,10 @@ class User extends BaseEntity {
 	@Field((type) => Unlike)
 	@OneToMany((type) => Unlike, (unlike) => unlike.user)
 	public unlikes: Unlike[]
+
+	@Field((type) => [Post!]!)
+	@OneToMany((type) => Post, (post) => post.user)
+	public posts: Post[]
 
 	public comparePassword(password: string): boolean {
 		if (this.password) {

@@ -47,7 +47,8 @@ type Post {
 
 type Query {
   getUserTree(id: Float!): Post!
-  users: [User!]!
+  getUsers: [User!]!
+  getUser(userId: Float!): User!
 }
 
 type Unlike {
@@ -76,6 +77,8 @@ type User {
   follower: User!
   likes: [Like!]!
   unlikes: [Unlike!]!
+  posts: [Post!]!
+  postCount: Float!
 }
 
 input UserInput {

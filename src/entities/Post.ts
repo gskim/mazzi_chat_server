@@ -28,9 +28,7 @@ export enum PostStatus {
 	PRIVATE = 'private',
 	DELETE = 'delete',
 }
-registerEnumType(PostStatus, {
-	name: 'PostStatus',
-})
+registerEnumType(PostStatus, { name: 'PostStatus' })
 @ObjectType()
 @Entity({
 	orderBy: {
