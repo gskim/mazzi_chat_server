@@ -9,7 +9,7 @@ import { dirname } from 'path'
 import 'reflect-metadata'
 
 import { Action, useContainer as routingUseContainer, useExpressServer } from 'routing-controllers'
-import { buildSchemaSync, useContainer as graphqlContainer } from 'type-graphql'
+import { buildSchemaSync } from 'type-graphql'
 import { Container } from 'typedi'
 import { useContainer as ormUseContainer } from 'typeorm'
 import User from './entities/User'
@@ -28,7 +28,6 @@ app.use(morgan('[:status]:method :url :response-time ms'))
 
 routingUseContainer(Container)
 ormUseContainer(Container)
-graphqlContainer(Container)
 
 export const dbConnection = async () => {
 	return await createConnection(connectionOptions)
@@ -50,6 +49,7 @@ app.use(JWT)
 const schema = buildSchemaSync({
 	resolvers: [__dirname + '/resolvers/**/*.resolvers.ts', __dirname + '/resolvers/**/*.resolvers.js'],
 	emitSchemaFile: true,
+	container: Container,
 })
 app.use('/graphql', graphqlHTTP({
 	schema: schema,

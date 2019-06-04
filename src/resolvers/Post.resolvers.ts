@@ -4,13 +4,13 @@ import { getManager, Repository } from 'typeorm'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import Post from '../entities/Post'
 import PostService from '../services/PostService'
-@Service()
+// @Service()
 @Resolver()
 class PostResolver {
 
 	private post: Post
 
-	constructor(protected postService: PostService) {}
+	constructor(protected postService: PostService) { }
 
 	@Query((returns) => Post)
 	public async getUserTree(

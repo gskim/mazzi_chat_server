@@ -10,7 +10,11 @@ import createJWT from '../utils/createJWT'
 import { sendVerificationEmail } from '../utils/sendEmail'
 @Service()
 export default class UserService {
-	constructor(@InjectRepository(User) private readonly userRepository: UserRepository) {}
+	constructor(@InjectRepository(User) private readonly userRepository: UserRepository) { }
+
+	public async getUserById(userId: number) {
+		return await this.userRepository.findOne(userId)
+	}
 
 	public async signUp(user: User) {
 		return await this.userRepository.add(user)

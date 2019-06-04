@@ -6,7 +6,7 @@ import User from '../entities/User'
 import UserService from '../services/UserService'
 import { UserInput } from '../types/User.types'
 
-@Service()
+// @Service()
 @Resolver((of) => User)
 class UserResolver {
 
@@ -17,7 +17,9 @@ class UserResolver {
 
 	@Query((returns) => [User] || null)
 	public async getUsers() {
-		const users = await this.userRepository.find()
+		const users = await this.userRepository.find({
+			relations: ['posts'],
+		})
 		return users
 	}
 
@@ -43,6 +45,7 @@ class UserResolver {
 
 	@FieldResolver((returns) => Number)
 	public async postCount(@Root() root: User) {
+		console.log(root)
 		return root.posts.length
 	}
 }
