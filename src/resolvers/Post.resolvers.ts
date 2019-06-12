@@ -1,11 +1,8 @@
-import { Arg, Ctx, Field, InputType, Mutation, Query, Resolver } from 'type-graphql'
-import { Service } from 'typedi'
-import { getManager, Repository } from 'typeorm'
-import { InjectRepository } from 'typeorm-typedi-extensions'
+import { Arg, Ctx, Field, FieldResolver, InputType, Mutation, Query, Resolver, Root } from 'type-graphql'
 import Post from '../entities/Post'
 import PostService from '../services/PostService'
 // @Service()
-@Resolver()
+@Resolver((of) => Post)
 class PostResolver {
 
 	private post: Post
@@ -13,9 +10,22 @@ class PostResolver {
 	constructor(protected postService: PostService) { }
 
 	@Query((returns) => Post)
-	public async getUserTree(
+	public async getPostTree(
 		@Arg('id') id: number,
 	) {
 		return await this.postService.getPostTree(id)
 	}
+
+	@Query((returns) => [Post])
+	public async posts() {
+		return await this.postService.getPostAll()
+	}
+
+	@FieldResolver((returns) => Number)
+	public likeCnt(
+		@Root() root: Post,
+	) {
+		return root.likes.length
+	}
+
 }

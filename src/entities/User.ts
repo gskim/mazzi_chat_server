@@ -15,6 +15,7 @@ import {
 	ManyToOne,
 	OneToMany,
 	PrimaryGeneratedColumn,
+	RelationCount,
 	UpdateDateColumn,
 } from 'typeorm'
 import Chat from './Chat'
@@ -102,13 +103,18 @@ class User extends BaseEntity {
 	@ManyToMany((type) => Chat, (chat) => chat.users)
 	public chats: Chat[]
 
-	@Field((type) => User)
-	@ManyToOne((type) => User)
-	public following: User
+	@ManyToMany((type) => User, (user) => user.following, { cascade: ['insert', 'update'] })
+	@JoinTable()
+	public followers: User[]
 
-	@Field((type) => User)
-	@OneToMany((type) => User, (user) => user.id)
-	public follower: User
+	@ManyToMany((type) => User, (user) => user.followers, { cascade: ['insert', 'update'] })
+	public following: User[]
+
+	// @RelationCount((user: User) => user.followers)
+	// public followersCount: number
+
+	// @RelationCount((user: User) => user.following)
+	// public followingCount: number
 
 	@Field((type) => Like)
 	@OneToMany((type) => Like, (like) => like.user)

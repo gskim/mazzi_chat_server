@@ -9,7 +9,7 @@ import PostRepository from '../repositories/PostRepository'
 export default class PostService {
 	constructor(
 		@InjectRepository(Post) private readonly postRepository: PostRepository,
-) {}
+	) { }
 	public async addPost(post: Post) {
 		const postOrderSequence = await PostOrderSequence.save(new PostOrderSequence())
 		post.orderId = -1 * postOrderSequence.id
@@ -18,6 +18,10 @@ export default class PostService {
 
 	public async getPost(id: number) {
 		return await this.postRepository.get(id)
+	}
+
+	public async getPostAll() {
+		return await this.postRepository.find()
 	}
 
 	public async getPostList(lastId: number) {

@@ -12,7 +12,7 @@ export default class PostRepository extends Repository<Post> {
 	}
 	public async getTree(id: number) {
 		return await this.findOne(id, {
-			relations: ['user', 'image', 'likes', 'unlikes', 'children', 'children.user', 'children.likes', 'children.unlikes', 'children.children', 'children.children.user', 'children.children.likes', 'children.children.unlikes'],
+			relations: ['user', 'images', 'likes', 'unlikes', 'children', 'children.user', 'children.likes', 'children.unlikes', 'children.children', 'children.children.user', 'children.children.likes', 'children.children.unlikes'],
 		})
 	}
 }

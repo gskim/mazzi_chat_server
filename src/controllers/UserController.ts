@@ -1,8 +1,10 @@
 import * as Entity from 'baiji-entity'
 import { Request } from 'express'
-import { Authorized, BodyParam, CurrentUser, Get, JsonController, NotFoundError, Param, Post, Put } from 'routing-controllers'
+import { Authorized, BodyParam, CurrentUser, Delete, Get, JsonController, NotFoundError, Param, Post, Put } from 'routing-controllers'
+import { InjectRepository } from 'typeorm-typedi-extensions'
 import User, { Gender } from '../entities/User'
 import Verification from '../entities/Verification'
+import UserRepository from '../repositories/UserRepository'
 import UserRepresentor, { UserDefault } from '../representors/UserRepresentor'
 import UserService from '../services/UserService'
 import { sendVerificationEmail } from '../utils/sendEmail'
@@ -10,7 +12,7 @@ import { sendVerificationEmail } from '../utils/sendEmail'
 @JsonController('/users')
 export class UserController {
 
-	constructor(protected userService: UserService) {}
+	constructor(protected userService: UserService, @InjectRepository(User) private readonly userRepository: UserRepository) { }
 
 	@Authorized()
 	@Put('/')
@@ -22,7 +24,6 @@ export class UserController {
 		@BodyParam('birthDay') birthDay: number,
 		@BodyParam('gender') gender: Gender,
 	) {
-		console.log(currentUser)
 		if (currentUser) {
 			currentUser.nickname = nickname
 			currentUser.birthYear = birthYear
@@ -98,14 +99,35 @@ export class UserController {
 		}
 	}
 
-	@Get('/:id')
-	public async getUserByJWT(@Param('id') id: number, @CurrentUser() currentUser: User): Promise<UserDefault> {
-		if (currentUser) {
-			id = currentUser.id
-		}
-		const user = await User.findOne(id)
+	@Get('/followers')
+	public async followersss(@CurrentUser() currentUser: User): Promise<User[]> {
+		return await this.userRepository.createQueryBuilder()
+			.relation('followers')
+			.of(currentUser)
+			.loadMany()
+	}
+
+	@Get('/simple')
+	public async getUserByJWT(@CurrentUser() currentUser: User): Promise<UserDefault> {
 		const userDefaultEntity = new Entity(UserRepresentor.userDefault)
-		return userDefaultEntity.parse(user)
+		return userDefaultEntity.parse(currentUser)
+	}
+
+	@Post('/follow')
+	public async follow(@BodyParam('userId') userId: number, @CurrentUser() currentUser: User) {
+		await this.userRepository.createQueryBuilder()
+			.relation(User, 'followers')
+			.of(currentUser.id)
+			.add(userId)
+		return true
+	}
+	@Post('/unfollow')
+	public async unfollow(@BodyParam('userId') userId: number, @CurrentUser() currentUser: User) {
+		await this.userRepository.createQueryBuilder()
+			.relation(User, 'followers')
+			.of(currentUser.id)
+			.remove(userId)
+		return true
 	}
 
 }

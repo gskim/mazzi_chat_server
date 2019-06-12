@@ -1,4 +1,4 @@
-import { Arg, Ctx, Field, FieldResolver, InputType, Mutation, Query, Resolver, ResolverInterface, Root } from 'type-graphql'
+import { Arg, Args, Ctx, Field, FieldResolver, InputType, Mutation, Query, Resolver, ResolverInterface, Root } from 'type-graphql'
 import { Service } from 'typedi'
 import { Repository } from 'typeorm'
 import { InjectRepository } from 'typeorm-typedi-extensions'
