@@ -6,6 +6,7 @@
   "author": "gskim <kiseon1987@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "apollo-server-express": "^2.6.3",
     "aws-lambda": "^0.1.2",
     "aws-serverless-express": "^3.3.5",
     "baiji-entity": "^1.1.0-alpha.5",

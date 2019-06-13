@@ -1,11 +1,10 @@
 // import { graphqlExpress } from 'apollo-server-express'
+import { ApolloServer } from 'apollo-server-express'
 import * as bodyParser from 'body-parser'
 import * as cors from 'cors'
 import * as express from 'express'
-import { NextFunction, Request, Response } from 'express'
 import * as graphqlHTTP from 'express-graphql'
 import * as morgan from 'morgan'
-import { dirname } from 'path'
 import 'reflect-metadata'
 
 import { Action, useContainer as routingUseContainer, useExpressServer } from 'routing-controllers'
@@ -51,7 +50,14 @@ const schema = buildSchemaSync({
 	emitSchemaFile: true,
 	container: Container,
 })
-app.use('/graphql', graphqlHTTP({
+
+const server = new ApolloServer({
 	schema: schema,
-	graphiql: true,
-}))
+	playground: true,
+	tracing: true,
+})
+server.applyMiddleware({ app: app })
+// app.use('/graphql', graphqlHTTP({
+// 	schema: schema,
+// 	graphiql: true,
+// }))
