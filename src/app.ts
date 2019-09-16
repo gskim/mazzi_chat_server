@@ -3,18 +3,17 @@ import { ApolloServer } from 'apollo-server-express'
 import * as bodyParser from 'body-parser'
 import * as cors from 'cors'
 import * as express from 'express'
-import * as graphqlHTTP from 'express-graphql'
 import * as morgan from 'morgan'
 import 'reflect-metadata'
-
 import { Action, useContainer as routingUseContainer, useExpressServer } from 'routing-controllers'
+import { useContainer as socketUseContainer } from 'socket-controllers'
+import * as io from 'socket.io'
+
 import { buildSchemaSync } from 'type-graphql'
 import { Container } from 'typedi'
 import { useContainer as ormUseContainer } from 'typeorm'
-import User from './entities/User'
 import Authorization from './middlewares/Authorization'
 import JWT from './middlewares/JWT'
-import { UserMiddlewares } from './middlewares/UserMiddlewares'
 
 export const app = express()
 import { createConnection } from 'typeorm'
@@ -27,6 +26,7 @@ app.use(morgan('[:status]:method :url :response-time ms'))
 
 routingUseContainer(Container)
 ormUseContainer(Container)
+socketUseContainer(Container)
 
 export const dbConnection = async () => {
 	return await createConnection(connectionOptions)
@@ -57,7 +57,3 @@ const server = new ApolloServer({
 	tracing: true,
 })
 server.applyMiddleware({ app: app })
-// app.use('/graphql', graphqlHTTP({
-// 	schema: schema,
-// 	graphiql: true,
-// }))

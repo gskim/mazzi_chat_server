@@ -2,9 +2,9 @@
 import * as dotenv from 'dotenv'
 dotenv.config()
 import * as http from 'http'
-// ORM
 import 'reflect-metadata'
-
+import { useSocketServer } from 'socket-controllers'
+import * as socketIO from 'socket.io'
 import { app, dbConnection } from './App'
 
 class AppLocal {
@@ -15,6 +15,10 @@ class AppLocal {
 		this.port = this.normalizePort(process.env.PORT || 3000)
 		expressApp.set('port', this.port)
 		this.server = http.createServer(expressApp)
+		const io = socketIO(this.server)
+		useSocketServer(io, {
+			controllers: [__dirname + '/sockets/**/*.ts', __dirname + '/sockets/**/*.js'],
+		})
 	}
 
 	public async start() {

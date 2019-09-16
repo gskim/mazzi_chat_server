@@ -7,9 +7,7 @@ import PostOrderSequence from '../entities/PostOrderSequence'
 import PostRepository from '../repositories/PostRepository'
 @Service()
 export default class PostService {
-	constructor(
-		@InjectRepository(Post) private readonly postRepository: PostRepository,
-	) { }
+	@InjectRepository() private readonly postRepository: PostRepository
 	public async addPost(post: Post) {
 		const postOrderSequence = await PostOrderSequence.save(new PostOrderSequence())
 		post.orderId = -1 * postOrderSequence.id

@@ -28,7 +28,8 @@ export enum ChatType {
 @ObjectType()
 class Chat extends BaseEntity {
 	@Field((type) => ID)
-	@PrimaryGeneratedColumn() public id: number
+	@PrimaryGeneratedColumn()
+	public id: number
 
 	@Column({ nullable: true })
 	public name?: string

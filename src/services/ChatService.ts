@@ -7,9 +7,8 @@ import User from '../entities/User'
 import ChatRepository from '../repositories/ChatRepository'
 @Service()
 export default class ChatService {
-	constructor(
-		@InjectRepository(Chat) private readonly chatRepository: ChatRepository,
-) {}
+	@InjectRepository() private readonly chatRepository: ChatRepository
+
 	public async createChat(user: User, params) {
 		const chat = plainToClass(Chat, {
 			name: params.name,

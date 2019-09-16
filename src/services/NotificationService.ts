@@ -7,8 +7,7 @@ import User from '../entities/User'
 import NotificationRepository from '../repositories/NotificationRepository'
 @Service()
 export default class NotificationService {
-	constructor(@InjectRepository(Notification) private readonly notificationRepository: NotificationRepository) {}
-
+	@InjectRepository() private readonly notificationRepository: NotificationRepository
 	public async addLikeNotification(receiveUser: User, sendUser: User, targetId: number) {
 		const notification = plainToClass(Notification, {
 			targetId: targetId,
