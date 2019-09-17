@@ -7,7 +7,6 @@ export class MessageController {
 	@OnConnect()
 	public connection(@ConnectedSocket() socket: any) {
 		console.log('client connected')
-		socket.emit('init', 3)
 	}
 
 	@OnDisconnect()
@@ -15,8 +14,9 @@ export class MessageController {
 		console.log('client disconnected')
 	}
 
-	@OnMessage('init')
+	@OnMessage('sendMessage')
 	public save(@ConnectedSocket() socket: any, @MessageBody() message: any, @SocketRooms() rooms: any, @SocketIO() io: any) {
-
+		console.log(message)
+		io.emit('receiveMessage', message)
 	}
 }
