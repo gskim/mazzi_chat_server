@@ -1,4 +1,4 @@
-import { ConnectedSocket, MessageBody, OnConnect, OnDisconnect, OnMessage, SocketController, SocketIO, SocketRooms } from 'socket-controllers'
+import { ConnectedSocket, MessageBody, NspParams, OnConnect, OnDisconnect, OnMessage, SocketController, SocketIO, SocketRooms } from 'socket-controllers'
 
 @SocketController()
 export class MessageController {
@@ -15,8 +15,14 @@ export class MessageController {
 	}
 
 	@OnMessage('sendMessage')
-	public save(@ConnectedSocket() socket: any, @MessageBody() message: any, @SocketRooms() rooms: any, @SocketIO() io: any) {
-		console.log(message)
-		io.emit('receiveMessage', message)
+	public save(
+		@ConnectedSocket() socket: any,
+		@MessageBody() message: any,
+		@SocketRooms() rooms: any,
+		@SocketIO() io: any,
+	) {
+		io.emit('receiveMessage', '전체')
+		socket.emit('receiveMessage', '소켓')
+		rooms.emit('receiveMessage', 'room')
 	}
 }
