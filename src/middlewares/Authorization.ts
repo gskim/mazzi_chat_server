@@ -1,5 +1,7 @@
 import * as jwt from 'jsonwebtoken'
 import { Action } from 'routing-controllers'
+import { AuthChecker } from 'type-graphql';
+import { Context } from '../App';
 import User from '../entities/User'
 import decodeJWT from '../utils/decodeJWT'
 
@@ -29,6 +31,17 @@ export class Authorization implements Authorization {
 			return undefined
 		}
 	}
+
+	public customAuthChecker: AuthChecker<Context> = async (
+		{ root, args, context, info },
+		roles,
+	  ) => {
+		// here we can read the user from context
+		// and check his permission in the db against the `roles` argument
+		// that comes from the `@Authorized` decorator, eg. ["ADMIN", "MODERATOR"]
+
+		return true // or false if access is denied
+	  }
 
 }
 

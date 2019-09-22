@@ -5,9 +5,8 @@ import * as cors from 'cors'
 import * as express from 'express'
 import * as morgan from 'morgan'
 import 'reflect-metadata'
-import { Action, useContainer as routingUseContainer, useExpressServer } from 'routing-controllers'
+import { useContainer as routingUseContainer, useExpressServer } from 'routing-controllers'
 import { useContainer as socketUseContainer } from 'socket-controllers'
-import * as io from 'socket.io'
 
 import { buildSchemaSync } from 'type-graphql'
 import { Container } from 'typedi'
@@ -16,8 +15,28 @@ import Authorization from './middlewares/Authorization'
 import JWT from './middlewares/JWT'
 
 export const app = express()
+import { ContainerInstance } from 'typedi'
 import { createConnection } from 'typeorm'
 import connectionOptions from './ormConfig'
+
+export interface Context {
+  user: User
+  container: ContainerInstance
+}
+
+import { GraphQLResolveInfo } from 'graphql'
+import User from './entities/User'
+
+export interface ArgsDictionary {
+  [argName: string]: any
+}
+
+export interface ResolverData<ContextType = {}> {
+  root: any
+  args: ArgsDictionary
+  context: ContextType
+  info: GraphQLResolveInfo
+}
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -48,12 +67,22 @@ app.use(JWT)
 const schema = buildSchemaSync({
 	resolvers: [__dirname + '/resolvers/**/*.resolvers.ts', __dirname + '/resolvers/**/*.resolvers.js'],
 	emitSchemaFile: true,
-	container: Container,
+	authChecker: Authorization.prototype.customAuthChecker,
+	authMode: 'null',
+	// container: Container,
+	container: ({ context }: ResolverData<Context>) => context.container,
+
 })
 
 const server = new ApolloServer({
 	schema: schema,
 	playground: true,
 	tracing: true,
+	context: ({ req }) => {
+		const context = {
+		  user: req.user, // `req.user` comes from `express-jwt`
+		}
+		return context
+	},
 })
-server.applyMiddleware({ app: app })
+server.applyMiddleware({ app: app, path: '/graphql' })

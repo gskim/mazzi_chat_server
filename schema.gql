@@ -51,6 +51,7 @@ type Post {
 type Query {
   getPostTree(id: Float!): Post!
   posts: [Post!]!
+  getToken(userId: Float!): String!
   getUsers: [User!]!
   getUser(userId: Float!): User!
 }
