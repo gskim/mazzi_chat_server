@@ -1,18 +1,68 @@
 import * as Entity from 'baiji-entity'
-import { Request } from 'express'
-import { Authorized, BodyParam, CurrentUser, Delete, Get, JsonController, NotFoundError, Param, Post, Put } from 'routing-controllers'
+import { Authorized, BodyParam, CurrentUser, Get, JsonController, NotFoundError, Param, Post, Put } from 'routing-controllers'
+import { Service } from 'typedi'
 import { InjectRepository } from 'typeorm-typedi-extensions'
 import User, { Gender } from '../entities/User'
 import Verification from '../entities/Verification'
 import UserRepository from '../repositories/UserRepository'
 import UserRepresentor, { UserDefault } from '../representors/UserRepresentor'
 import UserService from '../services/UserService'
-import { sendVerificationEmail } from '../utils/sendEmail'
 
 @JsonController('/users')
 export class UserController {
 
-	constructor(protected userService: UserService, @InjectRepository(User) private readonly userRepository: UserRepository) { }
+	@Service()
+	private readonly userService: UserService
+	@InjectRepository()
+	private readonly userRepository: UserRepository
+
+	@Post('/email')
+	public async emailSignUp(
+		@BodyParam('email') email: string,
+		@BodyParam('password') password: string,
+	) {
+		return {
+			token: await this.userService.signUpByEmail(email, password),
+		}
+	}
+
+	@Put('/email')
+	public async emailSignIn(
+		@BodyParam('email') email: string,
+		@BodyParam('password') password: string,
+	) {
+		return {
+			token: await this.userService.signInByEmail(email, password),
+		}
+	}
+
+	@Post('/phone')
+	public async phoneSignUp(
+		@BodyParam('phone') phone: string,
+		@BodyParam('password') password: string,
+	) {
+		return {
+			token: await this.userService.signUpByPhone(phone, password),
+		}
+	}
+
+	@Put('/phone')
+	public async phoneSignIn(
+		@BodyParam('phone') phone: string,
+		@BodyParam('password') password: string,
+	) {
+		return {
+			token: await this.userService.signInByPhone(phone, password),
+		}
+	}
+
+	@Authorized()
+	@Put('/logout')
+	public async logout(
+		@CurrentUser() currentUser: User,
+	) {
+		//  device logout 처리
+	}
 
 	@Authorized()
 	@Put('/')
@@ -52,7 +102,7 @@ export class UserController {
 				return true
 			} else {
 				verification.verified = true
-				await await verification.save()
+				await verification.save()
 				return true
 			}
 		}
@@ -69,16 +119,6 @@ export class UserController {
 		}
 	}
 
-	@Post('/email')
-	public async emailSignUp(
-		@BodyParam('email') email: string,
-		@BodyParam('password') password: string,
-	) {
-		return {
-			token: await this.userService.signUpByEmail(email, password),
-		}
-	}
-
 	@Put('/sns')
 	public async snsSignIn(
 		@BodyParam('snsId') snsId: number,
@@ -86,16 +126,6 @@ export class UserController {
 	) {
 		return {
 			token: await this.userService.signInBySns(snsId, snsType),
-		}
-	}
-
-	@Put('/email')
-	public async emailSignIn(
-		@BodyParam('email') email: string,
-		@BodyParam('password') password: string,
-	) {
-		return {
-			token: await this.userService.signInByEmail(email, password),
 		}
 	}
 

@@ -19,6 +19,7 @@ import {
 	UpdateDateColumn,
 } from 'typeorm'
 import Chat from './Chat'
+import Device from './Device'
 import Like from './Like'
 import Post from './Post'
 import Unlike from './Unlike'
@@ -48,7 +49,7 @@ class User extends BaseEntity {
 
 	@Field()
 	@Column({ type: 'boolean', default: false })
-	public verifiedEmail: boolean
+	public verified: boolean
 
 	@Field()
 	@Column({ type: 'enum', enum: Gender, nullable: true })
@@ -127,6 +128,9 @@ class User extends BaseEntity {
 	@Field((type) => [Post!]!)
 	@OneToMany((type) => Post, (post) => post.user)
 	public posts: Post[]
+
+	@OneToMany((type) => Device, (device) => device.user)
+	public devices: Device[]
 
 	public comparePassword(password: string): boolean {
 		if (this.password) {
