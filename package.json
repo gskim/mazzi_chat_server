@@ -58,7 +58,7 @@
     "tsc-watch": "^1.0.31",
     "tslint": "^5.11.0",
     "tslint-eslint-rules": "^5.4.0",
-    "typescript": "^3.1.1"
+    "typescript": "3.7.2"
   },
   "scripts": {
     "start": "node node_modules/tsc-watch/index.js --project ./ --outDir ./dist --onSuccess \"node dist/AppLocal.js\"",
