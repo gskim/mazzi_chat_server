@@ -3,7 +3,7 @@ import { BadRequestError, NotFoundError } from 'routing-controllers'
 import { Service } from 'typedi'
 import { getManager, Repository } from 'typeorm'
 import { InjectRepository } from 'typeorm-typedi-extensions'
-import User from '../entities/User'
+import User, { Gender } from '../entities/User'
 import Verification from '../entities/Verification'
 import UserRepository from '../repositories/UserRepository'
 import VerificationRepository from '../repositories/VerificationRepository'
@@ -63,10 +63,12 @@ export default class UserService {
 		throw new NotFoundError('not found user')
 	}
 
-	public async signUpByEmail(email: string, password: string) {
+	public async signUpByEmail(email: string, password: string, nickname: string, gender: Gender) {
 		const user = plainToClass(User, {
 			email: email,
 			password: password,
+			nickname: nickname,
+			gender: gender,
 		})
 		const createdUser = await this.userRepository.add(user)
 		const verification = plainToClass(Verification, {
@@ -77,7 +79,8 @@ export default class UserService {
 		// if (createdUser.email) {
 		// 	const sendedEmail = await sendVerificationEmail(createdUser.email, createdVerification.key)
 		// }
-		return createJWT(createdUser.id)
+		// return createJWT(createdUser.id)
+		return true
 	}
 
 	public async signUpByPhone(phone: string, password: string) {

@@ -1,7 +1,7 @@
 import { Service } from 'typedi'
 import { LessThan, MoreThan } from 'typeorm'
 import { InjectRepository } from 'typeorm-typedi-extensions'
-import Post from '../entities/Post'
+import Post, { PostStatus } from '../entities/Post'
 import PostOrderSequence from '../entities/PostOrderSequence'
 import PostRepository from '../repositories/PostRepository'
 @Service()
@@ -21,7 +21,7 @@ export default class PostService {
 		return await this.postRepository.find()
 	}
 
-	public async getPostList(lastId: number) {
+	public async getPostList(lastId?: number) {
 		return await this.postRepository.find({
 			relations: ['user', 'children', 'likes', 'unlikes', 'images', 'children.children'],
 			where: {
@@ -29,6 +29,25 @@ export default class PostService {
 			},
 			take: 20,
 		})
+	}
+
+	public async getReplies(postId: number, lastId?: number) {
+		return await this.postRepository.createQueryBuilder('post')
+		.leftJoin('post.children', 'children')
+		.leftJoin(`post.likes`, 'likes')
+		.leftJoin(`children.likes`, 'childrenLikes')
+		.select(`"post"."id"`, 'id')
+		.addSelect(`"post"."text"`, 'text')
+		// .addSelect(`COUNT(children.id)`, 'replyCnt')
+		.where(`"post"."parentId" = :postId`)
+		.andWhere(`post.status = :status`)
+		.andWhere(`post.orderId > :lastId`)
+		.setParameters({
+			postId: postId,
+			status: PostStatus.PUBLIC,
+			lastId: lastId ? lastId : -9999999,
+		})
+		.getRawMany()
 	}
 
 	/**

@@ -21,15 +21,17 @@ export class PostController {
 		protected notificationService: NotificationService,
 	) {}
 
+	// 게시글 리스트
 	@Get('/')
 	public async getPostList(
 		@CurrentUser() currentUser: User,
-		@QueryParam('lastId') lastId: number,
+		@QueryParam('lastId') lastId?: number,
 	) {
 		const posts =  await this.postService.getPostList(lastId)
 		return PostRepresentor.postList.parse(posts)
 	}
 
+	// 게시글보기
 	@Get('/:id')
 	public async getPostDetail(
 		@CurrentUser() currentUser: User,
@@ -39,6 +41,7 @@ export class PostController {
 		return PostRepresentor.postDetail.parse(post)
 	}
 
+	// 게시글 등록
 	@RequestPost('/')
 	public async addPost(
 		@CurrentUser() currentUser: User,
@@ -51,6 +54,7 @@ export class PostController {
 		await this.postService.addPost(post)
 	}
 
+	// 댓글 등록
 	@RequestPost('/:id')
 	public async addReply(
 		@CurrentUser() currentUser: User,
@@ -67,6 +71,16 @@ export class PostController {
 		const createdReply = await this.postService.addPost(reply)
 	}
 
+	@Get('/:id/replies')
+	public async getReplies(
+		@CurrentUser() currentUser: User,
+		@Param('id') id: number,
+		@QueryParam('lastId') lastId?: number,
+	) {
+		return await this.postService.getReplies(id, lastId)
+	}
+
+	// 좋아요 토글
 	@RequestPost('/:id/like')
 	public async toggleLike(
 		@CurrentUser() currentUser: User,
@@ -100,6 +114,7 @@ export class PostController {
 		}
 	}
 
+	// 싫어요 토글
 	@RequestPost('/:id/unlike')
 	public async toggleUnlike(
 		@CurrentUser() currentUser: User,

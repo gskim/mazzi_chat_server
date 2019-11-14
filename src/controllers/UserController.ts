@@ -16,16 +16,21 @@ export class UserController {
 	@InjectRepository()
 	private readonly userRepository: UserRepository
 
+	// email 회원가입
 	@Post('/email')
 	public async emailSignUp(
 		@BodyParam('email') email: string,
 		@BodyParam('password') password: string,
+		@BodyParam('uuid') uuid: string,
+		@BodyParam('nickname') nickname: string,
+		@BodyParam('gender') gender: Gender,
 	) {
 		return {
-			token: await this.userService.signUpByEmail(email, password),
+			success: await this.userService.signUpByEmail(email, password, nickname, gender),
 		}
 	}
 
+	// 이메일 로그인
 	@Put('/email')
 	public async emailSignIn(
 		@BodyParam('email') email: string,
@@ -36,6 +41,7 @@ export class UserController {
 		}
 	}
 
+	// 전화번호 회원가입
 	@Post('/phone')
 	public async phoneSignUp(
 		@BodyParam('phone') phone: string,
@@ -46,6 +52,7 @@ export class UserController {
 		}
 	}
 
+	// 전화번호 로그인
 	@Put('/phone')
 	public async phoneSignIn(
 		@BodyParam('phone') phone: string,
@@ -56,6 +63,7 @@ export class UserController {
 		}
 	}
 
+	// 로그아웃
 	@Authorized()
 	@Put('/logout')
 	public async logout(
@@ -64,6 +72,7 @@ export class UserController {
 		//  device logout 처리
 	}
 
+	// 개인정보 수정
 	@Authorized()
 	@Put('/')
 	public async updateInfo(
@@ -88,9 +97,18 @@ export class UserController {
 		throw new NotFoundError('not found user')
 	}
 
-	@Get('/verification/:key')
+	// 인증번호 요청
+	@Post('/verification')
+	public async verificationRequest(
+		@CurrentUser() user: User,
+	) {
+		// email or phone 인증번호 발송
+	}
+
+	// 인증번호 확인
+	@Put('/verification')
 	public async emailVerification(
-		@Param('key') key: string,
+		@BodyParam('key') key: string,
 	) {
 		const verification = await Verification.findOne({
 			where: {
@@ -109,6 +127,7 @@ export class UserController {
 		throw new NotFoundError('not found verification')
 	}
 
+	// sns 회원가입
 	@Post('/sns')
 	public async snsSignUp(
 		@BodyParam('snsId') snsId: number,
@@ -119,6 +138,7 @@ export class UserController {
 		}
 	}
 
+	// sns 로그인
 	@Put('/sns')
 	public async snsSignIn(
 		@BodyParam('snsId') snsId: number,
@@ -129,6 +149,7 @@ export class UserController {
 		}
 	}
 
+	// 내 팔뤄리스트
 	@Get('/followers')
 	public async followersss(@CurrentUser() currentUser: User): Promise<User[]> {
 		return await this.userRepository.createQueryBuilder()
