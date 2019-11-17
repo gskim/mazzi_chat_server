@@ -76,11 +76,11 @@ class User extends BaseEntity {
 	public profilePhoto?: string
 
 	@Field()
-	@Column({ type: 'float', default: 0 })
+	@Column({ type: 'float', default: 0, precision: 12 })
 	public lat: number
 
 	@Field()
-	@Column({ type: 'float', default: 0 })
+	@Column({ type: 'float', default: 0, precision: 12 })
 	public lon: number
 
 	@Column({ type: 'int', nullable: true })

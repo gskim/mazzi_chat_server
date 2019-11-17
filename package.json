@@ -59,12 +59,16 @@
     "tsc-watch": "^1.0.31",
     "tslint": "^5.11.0",
     "tslint-eslint-rules": "^5.4.0",
-    "typescript": "3.7.2"
+    "typescript": "3.7.2",
+    "tsconfig-paths": "^3.9.0"
   },
   "scripts": {
     "start": "node node_modules/tsc-watch/index.js --project ./ --outDir ./dist --onSuccess \"node dist/AppLocal.js\"",
     "dev": "cd src && nodemon --watch 'src/**/*.ts' --exec ts-node AppLocal.ts",
-    "deploy": "npx tsc && serverless deploy --aws-profile gskim"
+    "deploy": "npx tsc && serverless deploy --aws-profile gskim",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
+    "migration": "npx tsc && yarn typeorm migration:generate -n ",
+    "migration-run": "yarn typeorm migration:run"
   },
   "now": {
     "name": "mazzi-chat",

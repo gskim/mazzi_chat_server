@@ -3,7 +3,7 @@ import { BodyParam, CurrentUser, Get, JsonController, NotFoundError, Param, Post
 import Post from '../entities/Post'
 import Unlike from '../entities/Unlike'
 import User from '../entities/User'
-import { PostRepresentor } from '../representors/PostRepresentor'
+import { PostListRepresentor, PostRepresentor } from '../representors/PostRepresentor'
 import LikeService from '../services/LikeService'
 import NotificationService from '../services/NotificationService'
 import PostService from '../services/PostService'
@@ -20,12 +20,20 @@ export class PostController {
 	) {}
 
 	// 게시글 리스트
+	@TransformClassToPlain()
 	@Get('/')
 	public async getPostList(
 		@CurrentUser() currentUser: User,
 		@QueryParam('lastId') lastId?: number,
 	) {
 		const posts =  await this.postService.getPostList(lastId)
+		const postListRepresentor = plainToClass(PostListRepresentor, { list: posts })
+		for (const postRepresentor of postListRepresentor.list) {
+			postRepresentor.isMine(currentUser)
+			postRepresentor.isLikeIt(currentUser)
+			postRepresentor.isNotLikeIt(currentUser)
+		}
+		return postListRepresentor
 	}
 
 	// 게시글보기

@@ -47,6 +47,8 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxN
 }
 #####################
 GET http://localhost:3000/posts
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTczODk0MjU0fQ.sXg7cbrfoaG6NmjCGjA-50U-gqt_Z8p1b2dmDOiK-rs
 ###############
 
 GET http://localhost:3000/posts?lastId=100

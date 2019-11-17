@@ -1,15 +1,17 @@
-import * as Entity from 'baiji-entity'
-import { Exclude, Expose } from 'class-transformer'
+import { Exclude, Expose, Transform, Type } from 'class-transformer'
 import Like from '../entities/Like'
 import { PostStatus } from '../entities/Post'
 import Unlike from '../entities/Unlike'
 import User from '../entities/User'
-Entity.types = {
-	string: { default: null },
-	number: { default: null },
-	boolean: { default: false },
-	date: { format: 'iso', default: null },
-	object: { default: {} },
+
+@Exclude()
+export class PostUserProfileRepresentor {
+	@Expose()
+	public id: number
+	@Expose()
+	public nickname: string
+	@Expose()
+	public profilePhoto: string
 }
 
 @Exclude()
@@ -18,8 +20,10 @@ export class PostRepresentor {
 	public likes: Like[]
 	@Expose({ toClassOnly: true })
 	public unlikes: Unlike[]
-	@Expose({ toClassOnly: true })
-	public user: User
+
+	@Expose()
+	@Type(() => PostUserProfileRepresentor)
+	public user: PostUserProfileRepresentor
 
 	@Expose()
 	public mine: boolean
@@ -30,6 +34,8 @@ export class PostRepresentor {
 
 	@Expose()
 	public id: number
+	@Expose()
+	public orderId: number
 	@Expose()
 	public title: string
 	@Expose()
@@ -58,4 +64,11 @@ export class PostRepresentor {
 	public isNotLikeIt(user: User) {
 		this.iDontLikeIt = this.unlikes.some((unlike) => unlike.user.id === user.id)
 	}
+}
+
+Exclude()
+export class PostListRepresentor {
+	@Expose()
+	@Type(() => PostRepresentor)
+	public list: PostRepresentor[]
 }
