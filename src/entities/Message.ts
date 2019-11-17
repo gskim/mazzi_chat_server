@@ -20,8 +20,7 @@ import User from './User'
 		orderId: 'ASC',
 	},
 })
-@Unique(['orderId'])
-@Index(['orderId'])
+
 class Message extends BaseEntity {
 	@Field((type) => ID)
 	@PrimaryGeneratedColumn() public id: number
@@ -42,7 +41,8 @@ class Message extends BaseEntity {
 	@Column({ type: 'boolean', default: false })
 	public sendSuccess: boolean
 
-	@Column({ unique: true })
+	@Index({ unique: true })
+	@Column()
 	public orderId: number
 
 	@ManyToOne((type) => Chat)

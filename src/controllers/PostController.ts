@@ -1,23 +1,21 @@
-import * as Entity from 'baiji-entity'
-import { classToPlain, plainToClass } from 'class-transformer'
-import { Request } from 'express'
-import { Authorized, BodyParam, CurrentUser, Get, JsonController, NotFoundError, Param, Post as RequestPost, QueryParam } from 'routing-controllers'
-import { Service } from 'typedi'
-import { getManager, getTreeRepository } from 'typeorm'
-import { InjectRepository } from 'typeorm-typedi-extensions'
-import Like from '../entities/Like'
-import Post, { PostStatus } from '../entities/Post'
+import { plainToClass, TransformClassToPlain } from 'class-transformer'
+import { BodyParam, CurrentUser, Get, JsonController, NotFoundError, Param, Post as RequestPost, QueryParam } from 'routing-controllers'
+import Post from '../entities/Post'
 import Unlike from '../entities/Unlike'
 import User from '../entities/User'
-import PostRepresentor from '../representors/PostRepresentor'
+import { PostRepresentor } from '../representors/PostRepresentor'
+import LikeService from '../services/LikeService'
 import NotificationService from '../services/NotificationService'
 import PostService from '../services/PostService'
-@Service()
+import UnlikeService from '../services/UnlikeService'
+
 @JsonController('/posts')
 export class PostController {
 
 	constructor(
 		protected postService: PostService,
+		protected likeService: LikeService,
+		protected unlikeService: UnlikeService,
 		protected notificationService: NotificationService,
 	) {}
 
@@ -28,17 +26,22 @@ export class PostController {
 		@QueryParam('lastId') lastId?: number,
 	) {
 		const posts =  await this.postService.getPostList(lastId)
-		return PostRepresentor.postList.parse(posts)
 	}
 
 	// 게시글보기
+	@TransformClassToPlain()
 	@Get('/:id')
 	public async getPostDetail(
 		@CurrentUser() currentUser: User,
 		@Param('id') id: number,
 	) {
-		const post = await this.postService.getPostTree(id)
-		return PostRepresentor.postDetail.parse(post)
+		const post = await this.postService.getPost(id)
+		if (!post) throw new NotFoundError('not found post')
+		const representorPost = plainToClass(PostRepresentor, post)
+		representorPost.isMine(currentUser)
+		representorPost.isLikeIt(currentUser)
+		representorPost.isNotLikeIt(currentUser)
+		return representorPost
 	}
 
 	// 게시글 등록
@@ -46,9 +49,11 @@ export class PostController {
 	public async addPost(
 		@CurrentUser() currentUser: User,
 		@BodyParam('text') text: string,
+		@BodyParam('title') title: string,
 	) {
 		const post = plainToClass(Post, {
 			text: text,
+			title: title,
 			user: currentUser,
 		})
 		await this.postService.addPost(post)
@@ -85,32 +90,21 @@ export class PostController {
 	public async toggleLike(
 		@CurrentUser() currentUser: User,
 		@Param('id') id: number,
+		@BodyParam('like') isLike: boolean,
 	) {
 		const [like, post] = await Promise.all([
-			Like.findOne({
-				where: {
-					post: plainToClass(Post, { id: id }),
-					user: currentUser,
-				},
-			}),
-			Post.findOne(id, {
-				relations: ['user'],
-			}),
+			this.likeService.get(id, currentUser),
+			this.postService.getPostWithUser(id),
 		])
 		if (!post) {
 			throw new NotFoundError('Not found post')
 		}
 		if (like) {
-			like.status = !like.status
-			await like.save()
-			if (like.status) await this.notificationService.addLikeNotification(post.user, currentUser, post.id)
+			await this.likeService.update(like, isLike)
 		} else {
-			const newLike = plainToClass(Like, {
-				post: post,
-				user: currentUser,
-			})
-			await newLike.save()
-			await this.notificationService.addLikeNotification(post.user, currentUser, post.id)
+			await this.likeService.add(post, currentUser)
+			// 처음 좋아요일때 푸시메세지
+			// await this.notificationService.addLikeNotification(post.user, currentUser, post.id)
 		}
 	}
 
@@ -119,34 +113,21 @@ export class PostController {
 	public async toggleUnlike(
 		@CurrentUser() currentUser: User,
 		@Param('id') id: number,
+		@BodyParam('unlike') isUnlike: boolean,
 	) {
-		const [unlike , post] = await Promise.all([
-			await Unlike.findOne({
-				where: {
-					postId: id,
-					userId: currentUser.id,
-				},
-			}),
-			Post.findOne(id, {
-				relations: ['user'],
-			}),
+		const [unlike, post] = await Promise.all([
+			this.unlikeService.get(id, currentUser),
+			this.postService.getPostWithUser(id),
 		])
 		if (!post) {
 			throw new NotFoundError('Not found post')
 		}
 		if (unlike) {
-			unlike.status = !unlike.status
-			await unlike.save()
-			if (unlike.status) await this.notificationService.addLikeNotification(post.user, currentUser, post.id)
+			await this.unlikeService.update(unlike, isUnlike)
 		} else {
-			const newUnlike = plainToClass(Unlike, {
-				post: plainToClass(Post, {
-					id: id,
-				}),
-				user: currentUser,
-			})
-			await newUnlike.save()
-			await this.notificationService.addLikeNotification(post.user, currentUser, post.id)
+			await this.unlikeService.add(post, currentUser)
+			// 처음 좋아요일때 푸시메세지
+			// await this.notificationService.addLikeNotification(post.user, currentUser, post.id)
 		}
 	}
 }

@@ -9,8 +9,18 @@ Content-Type: application/json
 
 ####################################
 
+PUT http://localhost:3000/users/email
+Content-Type: application/json
+
+{
+	"email": "gskim@gmail.com",
+	"password": "password"
+}
+
+####################################
+
 PUT http://localhost:3000/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNTQ2Njg1MzkxfQ.hMaxzGnvbP_fD_HD_lJf-A8Q4yIGAqYA_rvF1wLE3Y0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTczODk0MjU0fQ.sXg7cbrfoaG6NmjCGjA-50U-gqt_Z8p1b2dmDOiK-rs
 Content-Type: application/json
 
 {
@@ -22,3 +32,9 @@ Content-Type: application/json
 }
 
 ######################
+
+
+GET http://localhost:3000/test
+Content-Type: application/json
+
+####################################

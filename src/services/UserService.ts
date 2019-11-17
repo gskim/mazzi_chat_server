@@ -11,8 +11,9 @@ import createJWT from '../utils/createJWT'
 import { sendVerificationEmail } from '../utils/sendEmail'
 @Service()
 export default class UserService {
-	@InjectRepository() private readonly userRepository: UserRepository
-	@InjectRepository() private readonly verificationRepository: VerificationRepository
+
+	@InjectRepository(User) private userRepository: UserRepository
+	// @InjectRepository(Verification) private verificationRepository: VerificationRepository
 
 	public async getUserById(userId: number) {
 		return await this.userRepository.findOne(userId)
@@ -23,19 +24,26 @@ export default class UserService {
 	}
 
 	public async signInByEmail(email: string, password: string) {
-		const user = await this.userRepository.findOne({
-			where: {
-				email: email,
-			},
-		})
-		if (user) {
-			if (user.comparePassword(password)) {
-				return createJWT(user.id)
-			} else {
-				throw new BadRequestError('incorrect password')
+		try {
+			const user = await this.userRepository.findOne({
+				where: {
+					email: email,
+				},
+			})
+			console.log('--------------')
+			console.log(user)
+			if (user) {
+				if (user.comparePassword(password)) {
+					return createJWT(user.id)
+				} else {
+					throw new BadRequestError('incorrect password')
+				}
 			}
+			throw new NotFoundError('not found user')
+		} catch (error) {
+			console.log(error)
+			throw new Error('')
 		}
-		throw new NotFoundError('not found user')
 	}
 
 	public async signInBySns(snsId: number, snsType: string) {
@@ -74,7 +82,7 @@ export default class UserService {
 		const verification = plainToClass(Verification, {
 			userId: createdUser.id,
 		})
-		const createdVerification = await this.verificationRepository.save(verification)
+		// const createdVerification = await this.verificationRepository.save(verification)
 		// email로 인증번호 전송
 		// if (createdUser.email) {
 		// 	const sendedEmail = await sendVerificationEmail(createdUser.email, createdVerification.key)
@@ -91,7 +99,7 @@ export default class UserService {
 		const verification = plainToClass(Verification, {
 			userId: createdUser.id,
 		})
-		const createdVerification = await this.verificationRepository.save(verification)
+		// const createdVerification = await this.verificationRepository.save(verification)
 		// 문자로 인증번호 전송
 		return createJWT(createdUser.id)
 	}
@@ -110,5 +118,25 @@ export default class UserService {
 			}
 		}
 		throw new NotFoundError('not found user')
+	}
+	public async addFollower(user: User, followerId: number) {
+		return await this.userRepository.createQueryBuilder()
+			.relation(User, 'followers')
+			.of(user.id)
+			.add(followerId)
+	}
+
+	public async removeFollower(user: User, unfollowerId: number) {
+		return await this.userRepository.createQueryBuilder()
+			.relation(User, 'followers')
+			.of(user.id)
+			.remove(unfollowerId)
+	}
+
+	public async myFollowers(user: User) {
+		return await this.userRepository.createQueryBuilder()
+			.relation('followers')
+			.of(user)
+			.loadMany()
 	}
 }

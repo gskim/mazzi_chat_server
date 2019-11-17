@@ -1,20 +1,16 @@
 import * as Entity from 'baiji-entity'
 import { Authorized, BodyParam, CurrentUser, Get, JsonController, NotFoundError, Param, Post, Put } from 'routing-controllers'
-import { Service } from 'typedi'
-import { InjectRepository } from 'typeorm-typedi-extensions'
+import { Inject } from 'typedi'
 import User, { Gender } from '../entities/User'
 import Verification from '../entities/Verification'
-import UserRepository from '../repositories/UserRepository'
 import UserRepresentor, { UserDefault } from '../representors/UserRepresentor'
 import UserService from '../services/UserService'
 
 @JsonController('/users')
 export class UserController {
 
-	@Service()
+	@Inject()
 	private readonly userService: UserService
-	@InjectRepository()
-	private readonly userRepository: UserRepository
 
 	// email 회원가입
 	@Post('/email')
@@ -152,10 +148,7 @@ export class UserController {
 	// 내 팔뤄리스트
 	@Get('/followers')
 	public async followersss(@CurrentUser() currentUser: User): Promise<User[]> {
-		return await this.userRepository.createQueryBuilder()
-			.relation('followers')
-			.of(currentUser)
-			.loadMany()
+		return this.userService.myFollowers(currentUser)
 	}
 
 	@Get('/simple')
@@ -166,18 +159,12 @@ export class UserController {
 
 	@Post('/follow')
 	public async follow(@BodyParam('userId') userId: number, @CurrentUser() currentUser: User) {
-		await this.userRepository.createQueryBuilder()
-			.relation(User, 'followers')
-			.of(currentUser.id)
-			.add(userId)
+		await this.userService.addFollower(currentUser, userId)
 		return true
 	}
 	@Post('/unfollow')
 	public async unfollow(@BodyParam('userId') userId: number, @CurrentUser() currentUser: User) {
-		await this.userRepository.createQueryBuilder()
-			.relation(User, 'followers')
-			.of(currentUser.id)
-			.remove(userId)
+		await this.userService.removeFollower(currentUser, userId)
 		return true
 	}
 

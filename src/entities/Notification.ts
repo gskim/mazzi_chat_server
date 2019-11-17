@@ -30,8 +30,7 @@ export enum NotificationType {
 		orderId: 'ASC',
 	},
 })
-@Unique(['orderId'])
-@Index(['orderId'])
+
 class Notification extends BaseEntity {
 
 	@PrimaryGeneratedColumn() public id: number
@@ -54,7 +53,8 @@ class Notification extends BaseEntity {
 	@ManyToOne((type) => User)
 	public receiveUser: User
 
-	@Column({ unique: true })
+	@Index({ unique: true })
+	@Column()
 	public orderId: number
 
 	@CreateDateColumn() public createdAt: Date

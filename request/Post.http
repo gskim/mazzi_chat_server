@@ -1,30 +1,50 @@
 POST http://localhost:3000/posts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNTQ2Njg1MzkxfQ.hMaxzGnvbP_fD_HD_lJf-A8Q4yIGAqYA_rvF1wLE3Y0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTczODk0MjU0fQ.sXg7cbrfoaG6NmjCGjA-50U-gqt_Z8p1b2dmDOiK-rs
 
 {
-	"text": "test1"
+	"text": "text2",
+	"title": "title2"
 }
 ######
 
-POST http://localhost:3000/posts/103
+POST http://localhost:3000/posts/3
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNTQ2Njg1MzkxfQ.hMaxzGnvbP_fD_HD_lJf-A8Q4yIGAqYA_rvF1wLE3Y0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTczODk0MjU0fQ.sXg7cbrfoaG6NmjCGjA-50U-gqt_Z8p1b2dmDOiK-rs
 
 {
-	"text": "rereply1"
+	"text": "rereply2"
 }
 
 ##################
 
-POST http://localhost:3000/posts/104/like
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNTQ2Njg1MzkxfQ.hMaxzGnvbP_fD_HD_lJf-A8Q4yIGAqYA_rvF1wLE3Y0
+
+GET http://localhost:3000/posts/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTczODk0MjU0fQ.sXg7cbrfoaG6NmjCGjA-50U-gqt_Z8p1b2dmDOiK-rs
+
+##################
+
+GET http://localhost:3000/posts/1/replies
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTczODk0MjU0fQ.sXg7cbrfoaG6NmjCGjA-50U-gqt_Z8p1b2dmDOiK-rs
 
 #####################
 
-POST http://localhost:3000/posts/104/unlike
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OSwiaWF0IjoxNTQ2Njg1MzkxfQ.hMaxzGnvbP_fD_HD_lJf-A8Q4yIGAqYA_rvF1wLE3Y0
+POST http://localhost:3000/posts/2/like
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTczODk0MjU0fQ.sXg7cbrfoaG6NmjCGjA-50U-gqt_Z8p1b2dmDOiK-rs
 
+{
+	"like": true
+}
+#####################
+POST http://localhost:3000/posts/1/unlike
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTczODk0MjU0fQ.sXg7cbrfoaG6NmjCGjA-50U-gqt_Z8p1b2dmDOiK-rs
+
+{
+	"unlike": true
+}
 #####################
 GET http://localhost:3000/posts
 ###############

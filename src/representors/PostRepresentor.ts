@@ -1,4 +1,9 @@
 import * as Entity from 'baiji-entity'
+import { Exclude, Expose } from 'class-transformer'
+import Like from '../entities/Like'
+import { PostStatus } from '../entities/Post'
+import Unlike from '../entities/Unlike'
+import User from '../entities/User'
 Entity.types = {
 	string: { default: null },
 	number: { default: null },
@@ -7,55 +12,50 @@ Entity.types = {
 	object: { default: {} },
 }
 
-export default class PostRepresentor {
+@Exclude()
+export class PostRepresentor {
+	@Expose({ toClassOnly: true })
+	public likes: Like[]
+	@Expose({ toClassOnly: true })
+	public unlikes: Unlike[]
+	@Expose({ toClassOnly: true })
+	public user: User
 
-	public static postDefault = {
-		id: Number,
-		text: String,
-		createdAt: Date,
-		status: String,
-		image: {
-			name: String,
-		},
-		user: {
-			nickname: String,
-			profilePhoto: String,
-		},
-		likeCnt: {
-			type: 'number',
-			get: (obj) => {
-				return obj.likes.filter((like) => like.status).length
-			},
-		},
-		unlikeCnt: {
-			type: 'number',
-			get: (obj) => {
-				return obj.unlikes.filter((unlike) => unlike.status).length
-			},
-		},
-		replyCnt: {
-			type: 'number',
-			get: (obj) => {
-				let replyCount = 0
-				if (obj.children) {
-					for (const child of obj.children) {
-						if (child.children) {
-							replyCount = replyCount + child.children.length
-						}
-					}
-					replyCount = obj.children.length + replyCount
-				}
-				return replyCount
-			},
-		},
+	@Expose()
+	public mine: boolean
+	@Expose()
+	public iLikeIt: boolean
+	@Expose()
+	public iDontLikeIt: boolean
+
+	@Expose()
+	public id: number
+	@Expose()
+	public title: string
+	@Expose()
+	public text: string
+	@Expose()
+	public status: PostStatus
+	@Expose()
+	public createdAt: Date
+
+	@Expose()
+	get likeCnt(): number {
+		return this.likes.length
 	}
 
-	public static postList = new Entity(PostRepresentor.postDefault)
+	@Expose()
+	get unlikeCnt(): number {
+		return this.unlikes.length
+	}
 
-	public static postDetail = new Entity(PostRepresentor.postDefault)
-		.add('children', {
-			using: new Entity(PostRepresentor.postDefault)
-				.add('children', { using: new Entity(PostRepresentor.postDefault) }),
-		})
-
+	public isMine(user: User) {
+		this.mine = this.user.id === user.id
+	}
+	public isLikeIt(user: User) {
+		this.iLikeIt = this.likes.some((like) => like.user.id === user.id)
+	}
+	public isNotLikeIt(user: User) {
+		this.iDontLikeIt = this.unlikes.some((unlike) => unlike.user.id === user.id)
+	}
 }

@@ -35,8 +35,7 @@ registerEnumType(PostStatus, { name: 'PostStatus' })
 		orderId: 'ASC',
 	},
 })
-@Unique(['orderId'])
-@Index(['orderId'])
+
 class Post extends BaseEntity {
 
 	@Field((type) => ID)
@@ -58,7 +57,8 @@ class Post extends BaseEntity {
 	@OneToMany((type) => Image, (image) => image.post)
 	public images: Image[]
 
-	@Column({ unique: true })
+	@Index({ unique: true })
+	@Column()
 	public orderId: number
 
 	@Field((type) => User)

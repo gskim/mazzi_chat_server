@@ -17,6 +17,10 @@ export default class PostService {
 		return await this.postRepository.get(id)
 	}
 
+	public async getPostWithUser(id: number) {
+		return await this.postRepository.getWithUser(id)
+	}
+
 	public async getPostAll() {
 		return await this.postRepository.find()
 	}
@@ -33,13 +37,10 @@ export default class PostService {
 
 	public async getReplies(postId: number, lastId?: number) {
 		return await this.postRepository.createQueryBuilder('post')
-		.leftJoin('post.children', 'children')
-		.leftJoin(`post.likes`, 'likes')
-		.leftJoin(`children.likes`, 'childrenLikes')
-		.select(`"post"."id"`, 'id')
-		.addSelect(`"post"."text"`, 'text')
-		// .addSelect(`COUNT(children.id)`, 'replyCnt')
-		.where(`"post"."parentId" = :postId`)
+		.leftJoinAndSelect('post.children', 'children')
+		.leftJoinAndSelect(`post.likes`, 'likes')
+		.leftJoinAndSelect(`children.likes`, 'childrenLikes')
+		.where(`post.parentId = :postId`)
 		.andWhere(`post.status = :status`)
 		.andWhere(`post.orderId > :lastId`)
 		.setParameters({
@@ -47,7 +48,7 @@ export default class PostService {
 			status: PostStatus.PUBLIC,
 			lastId: lastId ? lastId : -9999999,
 		})
-		.getRawMany()
+		.getMany()
 	}
 
 	/**
