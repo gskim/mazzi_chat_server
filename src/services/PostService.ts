@@ -37,17 +37,22 @@ export default class PostService {
 
 	public async getReplies(postId: number, lastId?: number) {
 		return await this.postRepository.createQueryBuilder('post')
+		.leftJoinAndSelect('post.user', 'user')
 		.leftJoinAndSelect('post.children', 'children')
 		.leftJoinAndSelect(`post.likes`, 'likes')
-		.leftJoinAndSelect(`children.likes`, 'childrenLikes')
+		.leftJoinAndSelect(`post.unlikes`, 'unlikes')
+		.leftJoinAndSelect(`likes.user`, 'likeUser')
+		.leftJoinAndSelect(`unlikes.user`, 'unlikeUser')
 		.where(`post.parentId = :postId`)
 		.andWhere(`post.status = :status`)
+		.andWhere(`children.status = :status`)
 		.andWhere(`post.orderId > :lastId`)
 		.setParameters({
 			postId: postId,
 			status: PostStatus.PUBLIC,
 			lastId: lastId ? lastId : -9999999,
 		})
+		.take(10)
 		.getMany()
 	}
 

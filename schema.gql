@@ -42,8 +42,6 @@ type Post {
   status: String!
   images: [Image!]!
   user: User!
-  parent: Post!
-  children: [Post!]!
   createdAt: DateTime!
   likeCnt: Float!
 }

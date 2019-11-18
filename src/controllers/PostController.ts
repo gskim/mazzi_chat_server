@@ -38,7 +38,7 @@ export class PostController {
 
 	// 게시글보기
 	@TransformClassToPlain()
-	@Get('/:id')
+	@Get('/:id(\\d+)')
 	public async getPostDetail(
 		@CurrentUser() currentUser: User,
 		@Param('id') id: number,
@@ -59,16 +59,20 @@ export class PostController {
 		@BodyParam('text') text: string,
 		@BodyParam('title') title: string,
 	) {
-		const post = plainToClass(Post, {
-			text: text,
-			title: title,
-			user: currentUser,
-		})
+		const post = new Post()
+		post.text = text
+		post.title = title
+		post.user = currentUser
+		// const post = plainToClass(Post, {
+		// 	text: text,
+		// 	title: title,
+		// 	user: currentUser,
+		// })
 		await this.postService.addPost(post)
 	}
 
 	// 댓글 등록
-	@RequestPost('/:id')
+	@RequestPost('/:id(\\d+)')
 	public async addReply(
 		@CurrentUser() currentUser: User,
 		@Param('id') id: number,
@@ -84,17 +88,25 @@ export class PostController {
 		const createdReply = await this.postService.addPost(reply)
 	}
 
-	@Get('/:id/replies')
+	@TransformClassToPlain()
+	@Get('/:id(\\d+)/replies')
 	public async getReplies(
 		@CurrentUser() currentUser: User,
 		@Param('id') id: number,
 		@QueryParam('lastId') lastId?: number,
 	) {
-		return await this.postService.getReplies(id, lastId)
+		const replies = await this.postService.getReplies(id, lastId)
+		const postListRepresentor = plainToClass(PostListRepresentor, { list: replies })
+		for (const postRepresentor of postListRepresentor.list) {
+			postRepresentor.isMine(currentUser)
+			postRepresentor.isLikeIt(currentUser)
+			postRepresentor.isNotLikeIt(currentUser)
+		}
+		return postListRepresentor
 	}
 
 	// 좋아요 토글
-	@RequestPost('/:id/like')
+	@RequestPost('/:id(\\d+)/like')
 	public async toggleLike(
 		@CurrentUser() currentUser: User,
 		@Param('id') id: number,
@@ -117,7 +129,7 @@ export class PostController {
 	}
 
 	// 싫어요 토글
-	@RequestPost('/:id/unlike')
+	@RequestPost('/:id(\\d+)/unlike')
 	public async toggleUnlike(
 		@CurrentUser() currentUser: User,
 		@Param('id') id: number,

@@ -1,15 +1,12 @@
 import { Field, ID, ObjectType, registerEnumType } from 'type-graphql'
 import {
-	AfterInsert,
 	BaseEntity,
 	Column,
 	CreateDateColumn,
 	Entity,
 	Index,
-	JoinColumn,
 	ManyToOne,
 	OneToMany,
-	OneToOne,
 	PrimaryGeneratedColumn,
 	Tree,
 	TreeChildren,
@@ -35,7 +32,7 @@ registerEnumType(PostStatus, { name: 'PostStatus' })
 		orderId: 'ASC',
 	},
 })
-
+// @Tree('closure-table')
 class Post extends BaseEntity {
 
 	@Field((type) => ID)
@@ -65,13 +62,18 @@ class Post extends BaseEntity {
 	@ManyToOne((type) => User)
 	public user: User
 
-	@Field((type) => Post)
 	@ManyToOne((type) => Post, (post) => post.children)
 	public parent: Post
 
-	@Field((type) => [Post])
 	@OneToMany((type) => Post, (post) => post.parent)
 	public children: Post[]
+
+	// @TreeChildren({ cascade: true })
+	// public children: Post[]
+	// @TreeParent()
+	// public parent: Post
+	// @TreeLevelColumn()
+	// public level: number
 
 	@OneToMany((type) => Like, (like) => like.post)
 	public likes: Like[]
