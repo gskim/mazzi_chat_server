@@ -7,8 +7,12 @@ export default class PostRepository extends Repository<Post> {
 	}
 	public async get(id: number) {
 		return await this.findOne(id, {
-			relations: ['user', 'likes', 'likes.user', 'unlikes', 'unlikes.user', 'images'],
+			relations: ['user', 'likes', 'likes.user', 'unlikes', 'unlikes.user', 'images', 'postMappings'],
 		})
+	}
+
+	public async getWithParent(id: number) {
+		return await this.findOne(id, { relations: ['parent'] })
 	}
 
 	public async getWithUser(id: number) {
@@ -19,7 +23,9 @@ export default class PostRepository extends Repository<Post> {
 
 	public async getTree(id: number) {
 		return await this.findOne(id, {
-			relations: ['user', 'images', 'likes', 'unlikes', 'children', 'children.user', 'children.likes', 'children.unlikes', 'children.children', 'children.children.user', 'children.children.likes', 'children.children.unlikes'],
+			relations: ['user', 'images', 'likes', 'unlikes', 'children', 'children.user',
+			'children.likes', 'children.unlikes', 'children.children', 'children.children.user',
+			'children.children.likes', 'children.children.unlikes'],
 		})
 	}
 }

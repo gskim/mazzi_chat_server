@@ -111,12 +111,6 @@ class User extends BaseEntity {
 	@ManyToMany((type) => User, (user) => user.followers, { cascade: ['insert', 'update'] })
 	public following: User[]
 
-	// @RelationCount((user: User) => user.followers)
-	// public followersCount: number
-
-	// @RelationCount((user: User) => user.following)
-	// public followingCount: number
-
 	@Field((type) => Like)
 	@OneToMany((type) => Like, (like) => like.user)
 	public likes: Like[]

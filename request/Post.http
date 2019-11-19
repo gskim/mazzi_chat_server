@@ -1,6 +1,6 @@
 POST http://localhost:3000/posts
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTc0MDU0OTA2fQ.SxwkWb-tDpTqrQJOgW3xcPU0xI3sBjlQJ86ZgVzWkCk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTc0MTI5OTczfQ.jK5yVh60nI2bw0fjssAvLzISFgijdGxnD1UIBKXBF8M
 
 {
 	"text": "text2",
@@ -8,9 +8,9 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxN
 }
 ######
 
-POST http://localhost:3000/posts/14
+POST http://localhost:3000/posts/18
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTc0MDU0OTA2fQ.SxwkWb-tDpTqrQJOgW3xcPU0xI3sBjlQJ86ZgVzWkCk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTc0MTI5OTczfQ.jK5yVh60nI2bw0fjssAvLzISFgijdGxnD1UIBKXBF8M
 
 {
 	"text": "rereply"
@@ -19,14 +19,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxN
 ##################
 
 
-GET http://localhost:3000/posts/1
+GET http://localhost:3000/posts/17
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTc0MDU0OTA2fQ.SxwkWb-tDpTqrQJOgW3xcPU0xI3sBjlQJ86ZgVzWkCk
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTc0MTI5OTczfQ.jK5yVh60nI2bw0fjssAvLzISFgijdGxnD1UIBKXBF8M
 
 ##################
 
-GET http://localhost:3000/posts/8/replies
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTc0MDU0OTA2fQ.SxwkWb-tDpTqrQJOgW3xcPU0xI3sBjlQJ86ZgVzWkCk
+GET http://localhost:3000/posts/18/replies
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiaWF0IjoxNTc0MTI5OTczfQ.jK5yVh60nI2bw0fjssAvLzISFgijdGxnD1UIBKXBF8M
 
 #####################
 

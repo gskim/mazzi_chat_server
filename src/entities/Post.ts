@@ -5,9 +5,12 @@ import {
 	CreateDateColumn,
 	Entity,
 	Index,
+	JoinColumn,
+	JoinTable,
 	ManyToOne,
 	OneToMany,
 	PrimaryGeneratedColumn,
+	RelationCount,
 	Tree,
 	TreeChildren,
 	TreeLevelColumn,
@@ -17,6 +20,7 @@ import {
 } from 'typeorm'
 import Image from './Image'
 import Like from './Like'
+import PostMapping from './PostMapping'
 import Unlike from './Unlike'
 import User from './User'
 
@@ -81,7 +85,10 @@ class Post extends BaseEntity {
 	@OneToMany((type) => Unlike, (unlike) => unlike.post)
 	public unlikes: Unlike[]
 
-	@Field()
+	@OneToMany((type) => PostMapping, (postMapping) => postMapping.parent)
+	// @JoinColumn({ name: 'id', referencedColumnName: 'id' })
+	public postMappings: PostMapping[]
+
 	@CreateDateColumn() public createdAt: Date
 
 	@UpdateDateColumn() public updatedAt: Date

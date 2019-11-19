@@ -59,15 +59,11 @@ export class PostController {
 		@BodyParam('text') text: string,
 		@BodyParam('title') title: string,
 	) {
-		const post = new Post()
-		post.text = text
-		post.title = title
-		post.user = currentUser
-		// const post = plainToClass(Post, {
-		// 	text: text,
-		// 	title: title,
-		// 	user: currentUser,
-		// })
+		const post = plainToClass(Post, {
+			text: text,
+			title: title,
+			user: currentUser,
+		})
 		await this.postService.addPost(post)
 	}
 
@@ -78,14 +74,7 @@ export class PostController {
 		@Param('id') id: number,
 		@BodyParam('text') text: string,
 	) {
-		const reply = plainToClass(Post, {
-			text: text,
-			user: currentUser,
-			parent: plainToClass(Post, {
-				id: id,
-			}),
-		})
-		const createdReply = await this.postService.addPost(reply)
+		return await this.postService.addReply(id, text, currentUser)
 	}
 
 	@TransformClassToPlain()

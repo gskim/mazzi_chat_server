@@ -1,6 +1,7 @@
 import { Exclude, Expose, Transform, Type } from 'class-transformer'
 import Like from '../entities/Like'
 import { PostStatus } from '../entities/Post'
+import PostMapping from '../entities/PostMapping'
 import Unlike from '../entities/Unlike'
 import User from '../entities/User'
 
@@ -20,6 +21,8 @@ export class PostRepresentor {
 	public likes: Like[]
 	@Expose({ toClassOnly: true })
 	public unlikes: Unlike[]
+	@Expose({ toClassOnly: true })
+	public postMappings: PostMapping[]
 
 	@Expose()
 	@Type(() => PostUserProfileRepresentor)
@@ -48,6 +51,11 @@ export class PostRepresentor {
 	@Expose()
 	get likeCnt(): number {
 		return this.likes.length
+	}
+
+	@Expose()
+	get childrenCnt(): number {
+		return this.postMappings.length
 	}
 
 	@Expose()

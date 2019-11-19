@@ -42,7 +42,6 @@ type Post {
   status: String!
   images: [Image!]!
   user: User!
-  createdAt: DateTime!
   likeCnt: Float!
 }
 
