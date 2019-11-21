@@ -13,15 +13,7 @@ import { sendVerificationEmail } from '../utils/sendEmail'
 export default class UserService {
 
 	@InjectRepository(User) private userRepository: UserRepository
-	// @InjectRepository(Verification) private verificationRepository: VerificationRepository
-
-	public async getUserById(userId: number) {
-		return await this.userRepository.findOne(userId)
-	}
-
-	public async signUp(user: User) {
-		return await this.userRepository.add(user)
-	}
+	@InjectRepository(Verification) private verificationRepository: VerificationRepository
 
 	public async signInByEmail(email: string, password: string) {
 		try {
@@ -30,8 +22,6 @@ export default class UserService {
 					email: email,
 				},
 			})
-			console.log('--------------')
-			console.log(user)
 			if (user) {
 				if (user.comparePassword(password)) {
 					return createJWT(user.id)
@@ -41,7 +31,6 @@ export default class UserService {
 			}
 			throw new NotFoundError('not found user')
 		} catch (error) {
-			console.log(error)
 			throw new Error('')
 		}
 	}
@@ -80,15 +69,13 @@ export default class UserService {
 		})
 		const createdUser = await this.userRepository.add(user)
 		const verification = plainToClass(Verification, {
-			userId: createdUser.id,
+			user: createdUser,
 		})
-		// const createdVerification = await this.verificationRepository.save(verification)
-		// email로 인증번호 전송
-		// if (createdUser.email) {
-		// 	const sendedEmail = await sendVerificationEmail(createdUser.email, createdVerification.key)
-		// }
-		// return createJWT(createdUser.id)
-		return true
+		const createdVerification = await this.verificationRepository.save(verification)
+		if (createdUser.email) {
+			const sendedEmail = await sendVerificationEmail(createdUser.email, createdVerification.key)
+		}
+		return createJWT(createdUser.id)
 	}
 
 	public async signUpByPhone(phone: string, password: string) {

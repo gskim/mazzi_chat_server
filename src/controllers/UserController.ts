@@ -5,12 +5,15 @@ import User, { Gender } from '../entities/User'
 import Verification from '../entities/Verification'
 import UserRepresentor, { UserDefault } from '../representors/UserRepresentor'
 import UserService from '../services/UserService'
+import VerificationService from '../services/VerificationService'
 
 @JsonController('/users')
 export class UserController {
 
 	@Inject()
 	private readonly userService: UserService
+	@Inject()
+	private readonly verificationService: VerificationService
 
 	// email 회원가입
 	@Post('/email')
@@ -101,9 +104,17 @@ export class UserController {
 		// email or phone 인증번호 발송
 	}
 
+	@Get('/verification/:key')
+	public async emailVerification(
+		@Param('key') key: string,
+	) {
+		await this.verificationService.confirmVerification(key)
+		return '승인되었습니다.'
+	}
+
 	// 인증번호 확인
 	@Put('/verification')
-	public async emailVerification(
+	public async phoneVerification(
 		@BodyParam('key') key: string,
 	) {
 		const verification = await Verification.findOne({

@@ -10,7 +10,6 @@ export class TestController {
 
 	@Get('/')
 	public async test() {
-		await this.userService.getUserById(1)
 		return {
 			test: 'test',
 		}
