@@ -96,7 +96,7 @@ export class UserController {
 		throw new NotFoundError('not found user')
 	}
 
-	// 인증번호 요청
+	// 인증번호 재요청
 	@Post('/verification')
 	public async verificationRequest(
 		@CurrentUser() user: User,
@@ -154,6 +154,14 @@ export class UserController {
 		return {
 			token: await this.userService.signInBySns(snsId, snsType),
 		}
+	}
+
+	@Get('/users/:id(\\d+)')
+	public async userPage(
+		@CurrentUser() currentUser: User,
+		@Param('id') id: number,
+	) {
+		const user = await this.userService.userProfile(id)
 	}
 
 	// 내 팔뤄리스트

@@ -126,4 +126,12 @@ export default class UserService {
 			.of(user)
 			.loadMany()
 	}
+
+	public async userProfile(id: number) {
+		const user = await this.userRepository.createQueryBuilder('user')
+		.where(`user.id = :id`)
+		.setParameter('id', id)
+		.getOne()
+		return user
+	}
 }
